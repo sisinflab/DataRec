@@ -1,0 +1,21 @@
+
+experiment:
+  dataset: datarec2elliot
+  data_config:
+    strategy: dataset
+    dataset_path: /Users/albertomancino/PycharmProjects/RecommendationData/elliot/dataset.tsv
+  splitting:
+    strategy: fixed
+    train_path: /Users/albertomancino/PycharmProjects/RecommendationData/elliot/train.tsv
+    validation_path: /Users/albertomancino/PycharmProjects/RecommendationData/elliot/validation.tsv
+    test_path: /Users/albertomancino/PycharmProjects/RecommendationData/elliot/test.tsv
+  models:
+    ItemKNN:
+      meta:
+        hyper_opt_alg: grid
+        save_recs: True
+      neighbors: [50, 100]
+      similarity: cosine
+  evaluation:
+    simple_metrics: [nDCG]
+  top_k: 10
