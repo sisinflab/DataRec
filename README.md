@@ -1,6 +1,6 @@
 # 🧩 DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"
 
-<img src="datarec_architecture.png"  width="800">
+<img src="datarec_architecture.png"  width="600">
 
 
 This is the official GitHub repo for the paper *"DataRec: A Framework for Standardizing Recommendation Data Processing and Analysis"*.
