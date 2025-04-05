@@ -3,7 +3,7 @@
 <img src="datarec_architecture.png"  width="600">
 
 
-This is the official GitHub repo for the paper *"DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"*.
+This is the official GitHub repo for the paper *"DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"*, accepted for publication at the "The 48th International ACM SIGIR Conference on Research and Development in Information Retrieval", SIGIR 2025.
 
 ## Table of Contents
 
