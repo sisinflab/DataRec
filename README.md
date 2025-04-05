@@ -1,9 +1,9 @@
-# 🧩 DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"
+# 🧩 DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems
 
 <img src="datarec_architecture.png"  width="600">
 
 
-This is the official GitHub repo for the paper *"DataRec: A Framework for Standardizing Recommendation Data Processing and Analysis"*.
+This is the official GitHub repo for the paper *"DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"*.
 
 ## Table of Contents
 
@@ -16,10 +16,10 @@ This is the official GitHub repo for the paper *"DataRec: A Framework for Standa
 
 ## What is DataRec
 DataRec is a Python library that focuses on the data management phase of recommendation systems. It aims to promote standardization, interoperability, and best practices for processing and analyzing recommendation datasets.
-### Features
 
+### Features
 - Dataset Management: Supports reading and writing various data formats and allows dynamic format specification.
-- Reference Datasets: Includes commonly used recommendation datasets with traceable sources and versioning.
+- Reference Datasets: Include commonly used recommendation datasets with traceable sources and versioning.
 - Filtering Strategies: Implements popular filtering techniques.
 - Splitting Strategies: Implements widely used data splitting strategies.
 - Data Characteristics Analysis: Enables computing data characteristics that impact recommendation performance.
@@ -45,7 +45,7 @@ $ pip install -r requirements.txt
 ## Datasets
 DataRec includes several commonly used recommendation datasets to facilitate reproducibility and standardization. These datasets have been carefully curated, with traceable sources and versioning information maintained whenever possible.
 For each dataset, DataRec provides metadata such as the number of users, items, and interactions and data characteristics known to impact recommendation performance (e.g., sparsity and user/item distribution shifts).
-The dataset collection in DataRec is continuously updated to include more recent and widely used datasets from the recommendation systems literature. The most recent and widely-used version is included when the original data source is unavailable to ensure backward compatibility.
+The dataset collection in DataRec is continuously updated to include more recent and widely used datasets from the recommendation systems literature. The most recent and widely used version is included when the original data source is unavailable to ensure backward compatibility.
 
 The following datasets are currently included in DataRec:
 
