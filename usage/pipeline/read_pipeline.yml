@@ -1,0 +1,22 @@
+pipeline:
+- name: load
+  operation: MovieLens
+  params:
+    version: 1m
+- name: process
+  operation: Binarize
+  params:
+    threshold: 4
+- name: process
+  operation: UserItemIterativeKCore
+  params:
+    cores: 2
+- name: split
+  operation: RandomHoldOut
+  params:
+    test_ratio: 0.2
+    val_ratio: 0.1
+- name: export
+  operation: Elliot
+  params:
+    output_path: ./elliot/
