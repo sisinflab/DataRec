@@ -1,0 +1,11 @@
+numpy
+pandas
+scikit-learn
+tqdm
+gdown
+requests
+typing
+typing_extensions
+py7zr
+pyyaml
+appdirs

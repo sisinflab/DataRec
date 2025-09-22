@@ -1,0 +1,8 @@
+/venv
+/.idea
+/data
+/docs/build
+.DS_Store
+__pycache__/
+*.egg-info/
+/build

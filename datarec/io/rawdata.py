@@ -1,0 +1,144 @@
+import pandas as pd
+
+
+class RawData:
+    """
+    Container for raw datasets in DataRec.
+
+    Wraps a `pandas.DataFrame` and stores metadata about user, item, rating, and timestamp columns.
+    Provides lightweight methods for slicing, copying, and merging data.
+    """
+    def __init__(self, data=None, header=False, user=None, item=None, rating=None, timestamp=None):
+        """
+        Initialize a RawData object.
+
+        Args:
+            data (pd.DataFrame): DataFrame of the dataset. Defaults to None.
+            header (bool): Whether the file has a header. Defaults to False.
+            user (str): Column name for user IDs.
+            item (str): Column name for item IDs.
+            rating (str): Column name for ratings.
+            timestamp (str): Column name for timestamps.
+        """
+        self.data = data
+        self.header = header
+        if data is None:
+            self.data = pd.DataFrame
+            self.header = header
+        self.path = None
+
+        self.user = user
+        self.item = item
+        self.rating = rating
+        self.timestamp = timestamp
+
+    def append(self, new_data):
+        """
+        Append new rows to the dataset.
+
+        Args:
+            new_data (pd.DataFrame): DataFrame to append.
+
+        Returns:
+            None
+        """
+        self.data.append(new_data)
+
+    def copy(self, deep=True):
+        """
+        Make a copy of the dataset.
+
+        Args:
+            deep (bool): If True, return a deep copy of the dataset.
+
+        Returns:
+            (RawData): A copy of the dataset.
+
+        """
+        self.data.copy(deep=deep)
+
+    def __repr__(self):
+        """
+        Return a string representation of the dataset.
+        """
+        return repr(self.data)
+
+    def __len__(self):
+        """
+        Return the length of the dataset.
+        """
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        """
+        Return the item at the given index.
+        Args:
+            idx: index of the item to return.
+
+        Returns:
+            (RawData): the sample at the given index.
+
+        """
+        return self.data[idx]
+
+    def __add__(self, other):
+        """
+        Concatenate two RawData objects.
+        Args:
+            other (RawData): the other RawData to concatenate.
+
+        Returns:
+            (RawData): the concatenated RawData object.
+
+        """
+        self.__check_rawdata_compatibility__(other)
+        new_data = pd.concat([self.data, other.data])
+        new_rawdata = RawData(new_data, user=self.user, item=self.item, rating=self.rating,
+                              timestamp=self.timestamp, header=self.header)
+        return new_rawdata
+
+    def __iter__(self):
+        """
+        Iterate over dataset rows.
+
+        Returns:
+            (pd.Series): Each row in the dataset.
+
+        """
+        return iter(self.data)
+
+    def __check_rawdata_compatibility__(self, rawdata):
+        """
+        Check compatibility between RawData objects.
+        Args:
+            rawdata (RawData): RawData object to check.
+
+        Returns:
+            (bool): True if compatibility is verified.
+
+        """
+        return __check_rawdata_compatibility__(self, rawdata)
+
+
+def __check_rawdata_compatibility__(rawdata1: RawData, rawdata2: RawData):
+    """
+    Check compatibility between two RawData objects.
+    Args:
+        rawdata1 (RawData): First RawData object to check.
+        rawdata2 (RawData): Second RawData object to check.
+
+    Returns:
+        (bool): True if compatibility is verified.
+
+    """
+    if rawdata1.user != rawdata2.user:
+        raise ValueError('User columns are not compatible')
+    if rawdata1.item != rawdata2.item:
+        raise ValueError('Item columns are not compatible')
+    if rawdata1.rating != rawdata2.rating:
+        raise ValueError('Rating columns are not compatible')
+    if rawdata1.timestamp != rawdata2.timestamp:
+        raise ValueError('Timestamp columns are not compatible')
+    if rawdata1.header != rawdata2.header:
+        raise ValueError('Header is not compatible')
+    return True
