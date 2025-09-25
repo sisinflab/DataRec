@@ -74,7 +74,6 @@ The following datasets are currently included in DataRec:
 ## Next Updates
 - ⏳ improving logger
 - ⏳ improving signatures
-- ⏳ documentation
 
 ## Authors
 
