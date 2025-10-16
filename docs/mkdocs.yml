@@ -1,0 +1,86 @@
+site_name: DataRecDocumentation
+repo_url: "https://github.com/sisinflab/DataRec"
+repo_name: "DataRec"
+docs_dir: src
+site_dir: site
+
+theme:
+  name: material
+  features: 
+    - navigation.tabs           # Adds navigation bar
+    - navigation.tabs.sticky    # Sticks the navigation bar, so it is always open
+    - navigation.top            # Back-to-top button appears when you are scrolling up
+    - navigation.footer         # Adds a black footer
+    - navigation.indexes        # Attachs documents to section
+    - search.suggest            # Adds suggestions when you use the search bar
+    - search.highlight                   
+    - content.code.annotation
+    - content.code.copy         
+    - toc.follow                # The Table of content (toc) follows user position in the page
+  language: en
+  palette:                      # Button for light/dark mode
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+      primary: orange
+      accent: purple 
+    - scheme: slate 
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode    
+      primary: orange
+      accent: lime
+
+plugins:  
+  - search                                    # Adds search-bar
+  - section-index 
+  - mkdocstrings:                             # mdocstrings allows mkdocs to generate documentation from docstrings
+      handlers:
+        python:
+          options:
+            show_source: true                 # shows source code
+            members_order: source             # modules in documentation follow the order of implementation in the code
+            show_root_toc_entry: false        # shows the name of the file.py in the table of contents
+            show_root_heading: false          # shows the name of the file.py in the page
+            show_root_full_path: false
+            show_symbol_type_heading: true    # shows tags [attr, class, meth, func]
+            show_symbol_type_toc: true        # shows tags in the toc
+            show_signature: true              # shows the funcation as funcName(variables). If false: funcName
+            
+
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.mark
+  - attr_list
+
+# Adds customize style options
+extra_css:
+  - stylesheets/datarec_colors.css                    # DataRec orange
+
+
+# This is the navigation tree. Mkdocs looks for documentation in docs/
+nav: 
+  - Home: index.md
+  - Datasets: datasets_nav.md
+  - Get Started: get_started.md
+  - Documentation: 
+      - IO: documentation/io.md
+      - Data: documentation/data.md
+      - Datasets: documentation/datasets.md
+      - Processing: documentation/processing.md
+      - Splitters: documentation/splitters.md
+      - Pipe: documentation/pipe.md
+      - Pipeline: documentation/pipeline.md
+  - Tutorial: tutorial.md
+
