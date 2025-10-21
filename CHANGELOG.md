@@ -7,17 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [x.x.x] - yy-mm-dd
+## [1.2.0] - 2025-10-25
 ### Added
-- Nothing major
-
+- Ambar dataset
+- Automatic doc generation (just for datasets_nav)
+- Ambar test set
+- Dataset config file (only on Ambar dataset)
+- Automatic dataset download from config (only on Ambar dataset)
+- Automatic content information download (only on Ambar dataset)
+- Datasets registry (only Ambar available in this version)
 
 ### Changed
-- Nothing major
+- Readme generator moved to docs/autobuild 
+- Readme generator now works with different configurations
 
 
 ### Fixed
-- Nothing major
+- SisInfLab logo in documentation now stored at docs/assets/images
+- Fixed requirements. Docs requirements do not need python 3.10 anymore
+- Requirements update
 
 ---
 

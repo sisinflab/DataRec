@@ -16,3 +16,4 @@ from .mind.mind import Mind
 from .amazon_baby.amz_baby import AmazonBaby
 from .amazon_office.amz_office import AmazonOffice
 from .amazon_music.amz_music import AmazonMusic
+from .ambar.ambar import Ambar

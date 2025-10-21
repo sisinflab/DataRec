@@ -1,0 +1,61 @@
+dataset_name: "Ambar"
+version: "2024"
+
+datarec_class: datarec.datasets.ambar.ambar_2024.Ambar2024
+datarec_base_class: datarec.datasets.ambar.ambar.Ambar
+
+sources_info:
+    all:
+      - ratings
+      - artists
+      - tracks
+      - users
+    required:
+      - ratings
+    ratings: ratings
+    content:
+      - artists
+      - tracks
+      - users
+
+sources:
+  ratings:
+    source_type: GitHubSource
+    args:
+      archive: False
+      url: https://raw.githubusercontent.com/davidcontrerasaguilar/AMBAR/refs/heads/main/data/AMBAR/ratings_info.csv
+      checksum: c4ee943350b7ee42b167a3f3ee525005
+      checksum_algorithm: md5
+      inner_paths:
+        - ratings_info.csv
+      filename: ratings_info.csv
+  artists:
+    source_type: GitHubSource
+    args:
+      archive: False
+      url: https://raw.githubusercontent.com/davidcontrerasaguilar/AMBAR/refs/heads/main/data/AMBAR/artists_info.csv
+      checksum: 8c15a03f15f8a926e41f0689ca66c650
+      checksum_algorithm: md5
+      inner_paths:
+        - artists_info.csv
+      filename: artists_info.csv
+  tracks:
+    source_type: GitHubSource
+    args:
+      archive: False
+      url: https://raw.githubusercontent.com/davidcontrerasaguilar/AMBAR/refs/heads/main/data/AMBAR/tracks_info.csv
+      checksum: 872e2375da31c56e0d26ead87343fb71
+      checksum_algorithm: md5
+      inner_paths:
+        - tracks_info.csv
+      filename: tracks_info.csv
+  users:
+    source_type: GitHubSource
+    args:
+      archive: False
+      url: https://raw.githubusercontent.com/davidcontrerasaguilar/AMBAR/refs/heads/main/data/AMBAR/users_info.csv
+      checksum: d17cd7396ed88915495fc58537490d4b
+      checksum_algorithm: md5
+      inner_paths:
+        - users_info.csv
+      filename: users_info.csv

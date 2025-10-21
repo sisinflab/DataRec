@@ -1,0 +1,38 @@
+dataset_name: "MovieLens"
+version: "1m"
+
+datarec_class: datarec/datasets.movielens.movielens_1m.MovieLens1M
+datarec_base_class: datarec.datasets.movielens.movielens.MovieLens
+
+sources_info:
+  all:
+    - archive
+  required:
+    - archive
+  ratings: ratings
+  content:
+    - movies
+    - users
+
+sources:
+  ml1m_zip:
+    source_type: HttpSource
+    args:
+      archive: zip
+      downloadable: True
+      url: https://files.grouplens.org/datasets/movielens/ml-1m.zip
+      checksum: c4d9eecfca2ab87c1945afe126590906
+      checksum_algorithm: md5
+      filename: ml-1m.zip
+      inner_paths:
+        - ml-1m/movies.dat
+        - ml-1m/ratings.dat
+        - ml-1m/users.dat
+  ratings:
+    source_type: Source
+    args:
+      filename: ml-1m/ratings.dat
+      inner_paths:
+        - ml-1m/movies.dat
+        - ml-1m/ratings.dat
+        - ml-1m/users.dat

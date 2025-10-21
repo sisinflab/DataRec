@@ -1,6 +1,5 @@
 import math
 import warnings
-
 import pandas as pd
 import numpy as np
 from typing import Union, Optional
@@ -52,9 +51,6 @@ class DataRec:
             pipeline (Pipeline): A pipeline object to track preprocessing steps.
             
         """
-
-
-        
         self.path = None
         self._data = None
         self.dataset_name = dataset_name
@@ -770,13 +766,12 @@ class DataRec:
 
         try:
             import torch
-        except ImportError:
+        except ModuleNotFoundError:
             raise ImportError(
-                "PyTorch is required to use the to_torch_dataset() method. "
-                "Please install it with `pip install torch`."
+                "Torch is required for this feature. Please install it with `pip install datarec[torch]` or"
+                " `pip install -r requirements/requirements-torch.txt`."
             )
 
-        # Preparazione automatica del dataset
         if autoprepare:
             self.map_users_and_items()
             self.to_private()
@@ -786,7 +781,6 @@ class DataRec:
                 "Ensure that the dataset is prepared correctly before using it with PyTorch."
             )
 
-        # Selezione del dataset PyTorch
         if task == "pointwise":
             from datarec.data.torch_dataset import PointwiseTorchDataset
             return PointwiseTorchDataset(self, **kwargs)

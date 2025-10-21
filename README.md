@@ -166,5 +166,5 @@ See [LICENSE](LICENSE).
   <em>Maintained with ❤️ by <a href="https://github.com/sisinflab">SisInfLab</a></em> 
 </p>
 <p align="center">
-<img src="https://sisinflab.poliba.it/wp-content/uploads/2020/07/logo.png" width="100" alt="DataRec Logo">
+<img src=docs/assets/images/sisinflab_logo.png width="100" alt="DataRec Logo">
 </p>

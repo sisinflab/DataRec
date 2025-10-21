@@ -21,4 +21,4 @@ The following datasets are currently included in DataRec:
 | MovieLens               | https://grouplens.org/datasets/movielens/                                                |
 | Tmall                       | https://tianchi.aliyun.com/dataset/53?t=1716541860503                                        |
 | Yelp                        | https://www.yelp.com/dataset      |
-
+| Ambar | https://github.com/davidcontrerasaguilar/AMBAR |

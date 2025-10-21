@@ -19,12 +19,16 @@ def get_cache_dir(app_name="datarec", app_author="sisinflab"):
 
 
 DATA_DIR = get_cache_dir()
+DATASETS_CLASSES_DIR = os.path.join(PROJECT_DIRECTORY, 'datasets')
 RESULT_DIR = os.path.join(PROJECT_DIRECTORY, 'results')
 CONFIG_DIR = os.path.join(PROJECT_DIRECTORY, 'config_files')
 RAW_DATA_FOLDER = 'raw'
 PROCESSED_DATA_FOLDER = 'processed'
 DATASET_NAME = 'dataset.tsv'
-
+DOCS_FOLDER = os.path.join(PROJECT_DIRECTORY, 'docs')
+REGISTRY_FOLDER = os.path.join(PROJECT_DIRECTORY, 'datarec', 'registry')
+REGISTRY_DATASETS_FOLDER = os.path.join(REGISTRY_FOLDER, 'datasets')
+REGISTRY_VERSIONS_FOLDER = os.path.join(REGISTRY_FOLDER, 'versions')
 
 def dataset_directory(dataset_name: str, must_exist=False) -> str:
     """
@@ -76,3 +80,24 @@ def dataset_filepath(dataset_name: str) -> str:
         (str): the path of the dataset data
     """
     return os.path.join(dataset_directory(dataset_name), DATASET_NAME)
+
+def registry_dataset_filepath(dataset_name: str) -> str:
+    """
+    Given the dataset name returns the path of the dataset configuration file in the dataset registry
+    Args:
+        dataset_name (str): name of the dataset
+    Returns:
+        (str): the path of the dataset configuration file
+    """
+    return os.path.join(REGISTRY_DATASETS_FOLDER, dataset_name) + '.yml'
+
+def registry_version_filepath(dataset_name: str, dataset_version: str) -> str:
+    """
+    Given the dataset name returns the path of the dataset configuration file in the dataset registry
+    Args:
+        dataset_name (str): name of the dataset
+        dataset_version (str): version of the dataset
+    Returns:
+        (str): the path of the dataset configuration file
+    """
+    return os.path.join(REGISTRY_VERSIONS_FOLDER, dataset_name+'_'+dataset_version) + '.yml'
