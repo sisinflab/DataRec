@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-the-documentation-of-datarec-a-python-library-for-standardized-and-reproducible-data-management-in-recommender-systems" class="md-skip">
+        <a href="#datarec-documentation" class="md-skip">
           Skip to content
         </a>
       
@@ -434,20 +434,32 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What is DataRec">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
     <span class="md-ellipsis">
-      Features
+      Quickstart
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering Strategies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitting-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitting Strategies
+    </span>
+  </a>
   
 </li>
       
@@ -455,6 +467,15 @@
   <a href="#authors" class="md-nav__link">
     <span class="md-ellipsis">
       Authors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributors
     </span>
   </a>
   
@@ -691,12 +712,12 @@
   
   
     <li class="md-nav__item">
-      <a href="documentation/pipe.md" class="md-nav__link">
+      <a href="documentation/pipeline/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Pipe
+    Pipeline
     
   </span>
   
@@ -714,12 +735,12 @@
   
   
     <li class="md-nav__item">
-      <a href="documentation/pipeline/" class="md-nav__link">
+      <a href="documentation/registry/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Pipeline
+    Registry
     
   </span>
   
@@ -801,20 +822,32 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What is DataRec">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
     <span class="md-ellipsis">
-      Features
+      Quickstart
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering Strategies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitting-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitting Strategies
+    </span>
+  </a>
   
 </li>
       
@@ -822,6 +855,15 @@
   <a href="#authors" class="md-nav__link">
     <span class="md-ellipsis">
       Authors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributors
     </span>
   </a>
   
@@ -846,18 +888,43 @@
   
 
 
-<h1 id="welcome-to-the-documentation-of-datarec-a-python-library-for-standardized-and-reproducible-data-management-in-recommender-systems">Welcome to the Documentation of DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems</h1>
+<h1 id="datarec-documentation">DataRec Documentation</h1>
 <p><img src="./images/datarec_architecture.png"  width="600"></p>
-<p>This is the official Documentation Website for the paper <em>"DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"</em>, accepted for publication at the "The 48th International ACM SIGIR Conference on Research and Development in Information Retrieval", SIGIR 2025.</p>
+<p>This is the official documentation for <em>"DataRec: A Python Library for Standardized and Reproducible Data Management in Recommender Systems"</em> (SIGIR 2025).</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#what-is-datarec">What is DataRec</a></li>
+<li><a href="#quickstart">Quickstart</a></li>
 <li><a href="#filtering-strategies">Filtering Strategies</a></li>
 <li><a href="#splitting-strategies">Splitting Strategies</a></li>
 <li><a href="#authors">Authors</a></li>
 </ul>
 <h2 id="what-is-datarec">What is DataRec</h2>
-<p>DataRec is a Python library that focuses on the data management phase of recommendation systems. It aims to promote standardization, interoperability, and best practices for processing and analyzing recommendation datasets.</p>
+<p>DataRec is a Python library that focuses on the <strong>data management</strong> phase of recommendation systems. It promotes <strong>standardization</strong>, <strong>interoperability</strong>, and <strong>best practices</strong> for processing and analyzing recommendation datasets.</p>
+<p><strong>Key links:</strong>
+- <a href="get_started/">Get started</a>
+- <a href="datasets_nav/">Datasets</a>
+- <a href="documentation/pipeline/">Pipeline</a>
+- <a href="documentation/processing/">Processing</a>
+- <a href="documentation/splitters/">Splitters</a></p>
+<h2 id="quickstart">Quickstart</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">AmazonOffice</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.processing</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterOutDuplicatedInteractions</span><span class="p">,</span> <span class="n">UserItemIterativeKCore</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.splitters</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomHoldOut</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">data</span> <span class="o">=</span> <span class="n">AmazonOffice</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;2014&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prepare_and_load</span><span class="p">()</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">data</span> <span class="o">=</span> <span class="n">FilterOutDuplicatedInteractions</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">data</span> <span class="o">=</span> <span class="n">UserItemIterativeKCore</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">splits</span> <span class="o">=</span> <span class="n">RandomHoldOut</span><span class="p">(</span><span class="n">test_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">val_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span>
+</code></pre></div>
+<h2 id="filtering-strategies">Filtering Strategies</h2>
+<p>DataRec provides <strong>preprocessing filters</strong> to clean and shape interaction data before modeling. See the
+<code>Processing</code> section for the full list of filtering operations.</p>
+<h2 id="splitting-strategies">Splitting Strategies</h2>
+<p>DataRec includes multiple <strong>splitting strategies</strong> (uniform, user‑stratified, temporal) to build
+train/validation/test splits. See the <code>Splitters</code> section for details.</p>
 <h3 id="features">Features</h3>
 <ul>
 <li>Dataset Management: Supports reading and writing various data formats and allows dynamic format specification.</li>
@@ -876,6 +943,16 @@
 <li>Antonio Ferrara (antonio.ferrara@poliba.it)</li>
 <li>Claudio Pomo (claudio.pomo@poliba.it)</li>
 <li>Tommaso Di Noia (tommaso.dinoia@poliba.it)</li>
+</ul>
+<h2 id="contributors">Contributors</h2>
+<ul>
+<li><a href="https://github.com/AlbertoMancino">Alberto C. M. Mancino</a></li>
+<li><a href="https://github.com/a-difazio">Angela Di Fazio</a></li>
+<li><a href="https://github.com/salvatore-bufi">Salvatore Bufi</a></li>
+<li><a href="https://github.com/GiuseppeFasano">Giuseppe Fasano</a></li>
+<li><a href="https://github.com/GianLu210">Gianluca Colonna</a></li>
+<li><a href="https://github.com/MariaLuigiaN">Maria L. N. De Bonis</a></li>
+<li><a href="https://github.com/Marco-Valentini">Marco Valentini</a></li>
 </ul>
 
 
