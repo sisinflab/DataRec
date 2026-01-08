@@ -1,0 +1,114 @@
+dataset_name: "MIND"
+version: "large"
+
+sources:
+  train_archive:
+    source_type: ManualSource
+    args:
+      message: |
+        Microsoft News Dataset (MIND) requires manual download from the source.
+        Please download the dataset from the following link:
+        https://msnews.github.io/#Download
+      archive: zip
+      downloadable: False
+      filename: MINDlarge_train.zip
+      checksum: 0bfe5f08404a69b2bd76721e7b7f7d5d
+      checksum_algorithm: md5
+      inner_paths:
+        train: MINDlarge_train/behaviors.tsv
+        entity_embedding: MINDlarge_train/entity_embedding.vec
+        relation_embedding: MINDlarge_train/relation_embedding.vec
+        news: MINDlarge_train/news.tsv
+
+  validation_archive:
+    source_type: ManualSource
+    args:
+      message: |
+        Microsoft News Dataset (MIND) requires manual download from the source.
+        Please download the dataset from the following link:
+        https://msnews.github.io/#Download
+      archive: zip
+      downloadable: False
+      filename: MINDlarge_dev.zip
+      checksum: 64b9fc265c16814ba0f470542ef6cd69
+      checksum_algorithm: md5
+      inner_paths:
+        validation: MINDlarge_dev/behaviors.tsv
+        news: MINDlarge_dev/news.tsv
+        entity_embedding: MINDlarge_dev/entity_embedding.vec
+        relation_embedding: MINDlarge_dev/relation_embedding.vec
+
+  test_archive:
+      source_type: ManualSource
+      args:
+        message: |
+          Microsoft News Dataset (MIND) requires manual download from the source.
+          Please download the dataset from the following link:
+          https://msnews.github.io/#Download
+        archive: zip
+        downloadable: False
+        filename: MINDlarge_test.zip
+        checksum: 081f0b249f9d7927cb0c78fb37db833a
+        checksum_algorithm: md5
+        inner_paths:
+          test: MINDlarge_test/behaviors.tsv
+          news: MINDlarge_test/news.tsv
+          entity_embedding: MINDlarge_test/entity_embedding.vec
+          relation_embedding: MINDlarge_test/relation_embedding.vec
+
+
+resources:
+  train:
+    type: interactions
+    required: True
+    source_name: train_archive
+    filename: behaviors.tsv
+    format: sequence_tabular_inline
+    schema:
+      user_col: user
+      sequence_col: sequence
+      timestamp_col: time
+      cols:
+        - impression_id
+        - user
+        - time
+        - sequence
+        - impressions
+      col_sep: "\t"
+      sequence_sep: " "
+
+  validation:
+    type: interactions
+    source_name: validation_archive
+    filename: behaviors.tsv
+    format: sequence_tabular_inline
+    schema:
+      user_col: user
+      sequence_col: sequence
+      timestamp_col: time
+      cols:
+        - impression_id
+        - user
+        - time
+        - sequence
+        - impressions
+      col_sep: "\t"
+      sequence_sep: " "
+
+  test:
+    type: interactions
+    source_name: test_archive
+    filename: behaviors.tsv
+    format: sequence_tabular_inline
+    schema:
+      user_col: user
+      sequence_col: sequence
+      timestamp_col: time
+      cols:
+        - impression_id
+        - user
+        - time
+        - sequence
+        - impressions
+      col_sep: "\t"
+      sequence_sep: " "

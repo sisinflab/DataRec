@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 import numpy as np
+from typing import Any, List
 
 
 class BaseTorchDataset(Dataset):
@@ -83,7 +84,7 @@ class PairwiseTorchDataset(BaseTorchDataset):
         self.item_pool = item_pool or self.df[self.item_col].unique()
         self.user_pos_items = self.df.groupby(self.user_col)[self.item_col].apply(set).to_dict()
 
-    def sample_negatives(self, user):
+    def sample_negatives(self, user: Any) -> List[Any]:
         """
         Samples negative items for a given user, avoiding known positive items.
 

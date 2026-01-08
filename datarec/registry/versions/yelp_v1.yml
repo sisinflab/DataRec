@@ -1,0 +1,71 @@
+dataset_name: "Yelp"
+version: "v1"
+
+sources:
+  main_archive:
+    source_type: ManualSource
+    args:
+      message: |
+        The Yelp dataset requires manual download from the source.
+        Please download the dataset from the following link:
+        https://business.yelp.com/external-assets/files/Yelp-JSON.zip
+      archive: zip
+      filename: Yelp-JSON.zip
+      checksum: b0c36fe2d00a52d8de44fa3b2513c9d2
+      checksum_algorithm: md5
+      inner_paths:
+        data_archive: Yelp JSON/yelp_dataset.tar
+        documentation:  Yelp JSON/Yelp Dataset Documentation & ToS copy
+  data_archive:
+    source_type: NestedSource
+    args:
+      parent_source_name: main_archive
+      archive: tar
+      filename: yelp_dataset.tar
+      checksum: 0bc8cc1481ccbbd140d2aba2909a928a
+      checksum_algorithm: md5
+      inner_paths:
+        review: yelp_academic_dataset_review.json
+        business: yelp_academic_dataset_business.json
+        checkin:  yelp_academic_dataset_checkin.json
+        tip: yelp_academic_dataset_tip.json
+        user: yelp_academic_dataset_user.json
+        terms_of_use: Dataset_User_Agreement.pdf
+
+resources:
+  review:
+    type: interactions
+    required: True
+    source_name: data_archive
+    filename: yelp_academic_dataset_review.json
+    format: transactions_jsonl
+    schema:
+      user_col: user_id
+      item_col: business_id
+      rating_col: stars
+      timestamp_col: date
+  business:
+    type: content
+    source_name: data_archive
+    filename: yelp_academic_dataset_business.json
+    format: json
+  checkin:
+    type: content
+    source_name: data_archive
+    filename: yelp_academic_dataset_checkin.json
+    format: json
+  tip:
+    type: content
+    source_name: data_archive
+    filename: yelp_academic_dataset_tip.json
+    format: json
+  user:
+    type: content
+    source_name: data_archive
+    filename: yelp_academic_dataset_user.json
+    format: json
+  terms_of_use:
+    type: content
+    source_name: data_archive
+    filename: Dataset_User_Agreement.pdf
+    format: pdf

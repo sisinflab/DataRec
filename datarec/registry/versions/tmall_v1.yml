@@ -1,0 +1,58 @@
+dataset_name: "Tmall"
+version: "v1"
+
+sources:
+  main_archive:
+    source_type: ManualSource
+    args:
+      message: |
+        Tmall dataset requires manual download from the source.
+        Please download the dataset from the following link:
+        https://tianchi.aliyun.com/dataset/42
+      archive: zip
+      filename: data_format2.zip
+      checksum: b8143773b800c7420b201d04bc7a9c15
+      checksum_algorithm: md5
+      inner_paths:
+        train: data_format2/train_format2.csv
+        test:  data_format2/test_format2.csv
+
+resources:
+  train:
+    type: interactions
+    required: True
+    source_name: main_archive
+    filename: train_format2.csv
+    format: sequence_tabular_inline
+    schema:
+      cols:
+        - user_id
+        - age_range
+        - gender
+        - merchant_id
+        - label
+        - activity_log
+      user_col: user_id
+      sequence_col: activity_log
+      col_sep: ","
+      sequence_sep: "#"
+      header: 0
+
+  test:
+    type: interactions
+    source_name: main_archive
+    filename: train_format2.csv
+    format: sequence_tabular_inline
+    schema:
+      cols:
+        - user_id
+        - age_range
+        - gender
+        - merchant_id
+        - label
+        - activity_log
+      user_col: user_id
+      sequence_col: activity_log
+      col_sep: ","
+      sequence_sep: "#"
+      header: 0

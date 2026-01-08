@@ -1,0 +1,30 @@
+dataset_name: "AmazonSportsOutdoors"
+version: "2023"
+
+sources:
+  ratings:
+    source_type: HttpSource
+    args:
+      archive: gz
+      downloadable: True
+      url: https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/benchmark/0core/rating_only/Sports_and_Outdoors.csv.gz
+      checksum: 75e1dfbb3b3014fab914832b734922e6
+      checksum_algorithm: md5
+      filename: Sports_and_Outdoors.csv.gz
+      inner_paths:
+        ratings: Sports_and_Outdoors.csv
+
+resources:
+  ratings:
+    source_name: ratings
+    filename: Sports_and_Outdoors.csv
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: ","
+      user_col: user_id
+      item_col: parent_asin
+      rating_col: rating
+      timestamp_col: timestamp
+      header: 0

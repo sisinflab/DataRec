@@ -1,0 +1,20 @@
+dataset_name: CiaoDVD
+versions:
+  - "v1"
+latest_version: v1
+
+source: https://guoguibing.github.io/librec/datasets.html
+
+description: CiaoDVD is a dataset for DVDs recommendation.
+citation: |
+  @inproceedings{DBLP:conf/asunam/GuoZTY14,
+    author       = {Guibing Guo and
+                    Jie Zhang and
+                    Daniel Thalmann and
+                    Neil Yorke{-}Smith},
+    title        = {{ETAF:} An extended trust antecedents framework for trust prediction},
+    booktitle    = {{ASONAM}},
+    pages        = {540--547},
+    publisher    = {{IEEE} Computer Society},
+    year         = {2014}
+  }

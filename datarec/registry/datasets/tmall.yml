@@ -1,0 +1,19 @@
+dataset_name: Tmall
+versions:
+  - v1
+latest_version: v1
+
+source: https://tianchi.aliyun.com/dataset/42
+
+description: |
+  This dataset is from IJCAI 2015 Contest: https://tianchi.aliyun.com/competition/entrance/231674/information
+  The data set contains anonymized users' shopping logs in the past 6 months before and on the "Double 11" day,and the label information indicating whether they are repeated buyers. 
+  Due to privacy issue, data is sampled in a biased way, so the statistical result on this data set would deviate from the actual of Tmall.com.
+
+citation: |
+  @misc{
+      title={IJCAI-15 Repeat Buyers Prediction Dataset}
+      url={https://tianchi.aliyun.com/dataset/dataDetail?dataId=42},
+      author={Tianchi},
+      year={2018}
+      }

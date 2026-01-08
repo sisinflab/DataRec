@@ -1,0 +1,17 @@
+dataset: citeulike
+version: t
+computed_at: '2025-12-15T18:31:53.318550+00:00'
+characteristics:
+  n_users: 7947
+  n_items: 25584
+  n_interactions: 134860
+  space_size: 14.258893645721606
+  space_size_log: 1.1540858297095264
+  shape: 0.3106238273921201
+  shape_log: -0.507765233385266
+  density: 0.000663302288858182
+  density_log: -3.1782885040784317
+  gini_item: 0.5197283261904477
+  gini_user: 0.6368531036879522
+  ratings_per_user: 16.969925758147728
+  ratings_per_item: 5.271263289555972

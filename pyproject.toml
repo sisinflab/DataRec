@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "datarec"
-version = "1.2.1"
+version = "1.3.0"
 description = "Standardized & reproducible data management for recommender systems."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -17,14 +17,12 @@ authors = [
     { name = "Claudio Pomo", email = "claudio.pomo@poliba.it" },
     { name = "Tommaso Di Noia", email = "tommaso.dinoia@poliba.it" }
 ]
-license = { text = "MIT" }
-license-files = ["LICENCE.txt"]
+license = { text = "MIT" }   # ok così
 keywords = ["recommender-systems", "data", "ml", "etl"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.9",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Intended Audience :: Developers",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -35,14 +33,13 @@ dependencies = [
     "pandas>=1.5,<3",
     "scikit-learn>=1.2,<2",
     "tqdm>=4.64,<5",
-    "gdown>=4.7,<5",
+    "gdown",
     "requests>=2.28,<3",
-    "py7zr>=0.20,<1",
-    "PyYAML>=6,<7",
-    "platformdirs>=3,<5",
-    "appdirs>=1.4,<2",
-    "yaml",
-    "typing_extensions>=4.4,<5; python_version < '3.11'",
+    "py7zr",
+    "PyYAML",
+    "platformdirs>=4.4.0",
+    "appdirs>=1.4.4",
+    "typing_extensions",
 ]
 [project.optional-dependencies]
 torch = [
@@ -84,9 +81,9 @@ docs = [
     "PyYAML",
     "pyyaml_env_tag",
     "requests",
-    "sixZ",
-    "urllib3Z",
-    "watchdogZ"
+    "six",
+    "urllib3",
+    "watchdog"
 ]
 
 [project.urls]
@@ -94,5 +91,14 @@ Homepage = "https://sisinflab.github.io/DataRec/"
 Repository = "https://github.com/sisinflab/DataRec"
 Issues = "https://github.com/sisinflab/DataRec/issues"
 
+[tool.setuptools]
+license-files = ["LICENSE*", "COPYING*", "NOTICE*"]
+
 [tool.setuptools.packages.find]
-where = ["datarec"]
+where = ["."]
+include = ["datarec*"]
+exclude = ["tests*", "docs*", "dist*"]
+
+[tool.setuptools.package-data]
+datarec = ["**/*.yml", "**/*.yaml", "**/*.json", "**/*.csv", "**/*.txt", "**/*.md", "py.typed"]
+

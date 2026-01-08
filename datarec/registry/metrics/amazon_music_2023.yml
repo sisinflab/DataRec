@@ -1,0 +1,17 @@
+dataset: amazon_music
+version: '2023'
+computed_at: '2025-12-15T18:29:07.935064+00:00'
+characteristics:
+  n_users: 100952
+  n_items: 70511
+  n_interactions: 128763
+  space_size: 84.36958262312314
+  space_size_log: 1.9261859006548787
+  shape: 1.4317198734949157
+  shape_log: 0.15585805337951963
+  density: 1.8089196867576144e-05
+  density_log: -4.742580714716903
+  gini_item: 0.4038153653058994
+  gini_user: 0.20280361886090198
+  ratings_per_user: 1.2754873603296617
+  ratings_per_item: 1.826140602175547

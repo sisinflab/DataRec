@@ -1,0 +1,17 @@
+dataset: amazon_office
+version: '2023'
+computed_at: '2025-12-15T18:31:02.586271+00:00'
+characteristics:
+  n_users: 7613158
+  n_items: 710403
+  n_interactions: 12689349
+  space_size: 2325.5989083833865
+  space_size_log: 3.3665348149082335
+  shape: 10.716674901429188
+  shape_log: 1.030060056255404
+  density: 2.346225292975775e-06
+  density_log: -5.6296302877028435
+  gini_item: 0.8377877061123389
+  gini_user: 0.3341419828184234
+  ratings_per_user: 1.6667654868058694
+  ratings_per_item: 17.862183859020867

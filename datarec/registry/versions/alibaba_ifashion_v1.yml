@@ -1,0 +1,64 @@
+dataset_name: "Alibaba iFashion"
+version: "v1"
+
+sources:
+  user_data_archive:
+    source_type: GdownSource
+    args:
+      archive: 7z
+      downloadable: True
+      url: https://drive.google.com/uc?id=1G_1SV9H7fQMPPJOBmZpCnCkgifSsb9Ar
+      checksum: 2ff9254d67fb13d04824621ca1387622
+      checksum_algorithm: md5
+      filename: user_data.7z
+      inner_paths:
+        interactions: user_data.txt
+  item_data_archive:
+    source_type: GdownSource
+    args:
+      archive: zip
+      downloadable: True
+      url: https://drive.google.com/uc?id=17MAGl20_mf9V8j0-J6c7T3ayfZd-dIx8
+      checksum: f501244e784ae33defb71b3478d1125c
+      checksum_algorithm: md5
+      filename: item_data.txt.zip
+      inner_paths:
+        item_data: item_data.txt
+  outfit_data_archive:
+    source_type: GdownSource
+    args:
+      archive: zip
+      downloadable: True
+      url: https://drive.google.com/uc?id=1HFKUqBe5oMizU0lxy6sQE5Er1w9x-cC4 
+      checksum: f24078606235c122bd1d1c988766e83f
+      checksum_algorithm: md5
+      filename: outfit_data.txt.zip
+      inner_paths:
+        outfit_data: outfit_data.txt
+
+resources:
+    interactions:
+      source_name: user_data_archive
+      filename: user_data.txt
+      type: interactions
+      format: sequence_tabular_inline
+      required: True
+      schema:
+        cols:
+          - user
+          - item
+          - outfit
+        user_col: user
+        sequence_col: item
+        col_sep: ','
+        sequence_sep: ';'
+        stream: True
+        encode_ids: True
+    item_data:
+      source_name: item_data_archive
+      filename: item_data.txt
+      type: content
+    outfit_data:
+      source_name: outfit_data_archive
+      filename: outfit_data.txt
+      type: content

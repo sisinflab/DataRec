@@ -1,7 +1,8 @@
 import pytest
-from datarec.datasets import AmazonClothing
+from tests.datasets.helpers import dataset_versions, check_dataset
 
 
-def test_load_amazon_clothing_2023():
-    dataset = AmazonClothing(version='2023')
-    print(dataset)
+@pytest.mark.slow
+@pytest.mark.parametrize("version", dataset_versions("amazon_clothing"))
+def test_amazon_clothing(version):
+    check_dataset("amazon_clothing", version)

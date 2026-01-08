@@ -1,0 +1,55 @@
+dataset_name: "MovieLens"
+version: "100k"
+
+sources:
+  ml100k_zip:
+    source_type: HttpSource
+    args:
+      archive: zip
+      downloadable: True
+      url: https://files.grouplens.org/datasets/movielens/ml-100k.zip
+      checksum: 0e33842e24a9c977be4e0107933c0723
+      checksum_algorithm: md5
+      filename: ml-100k.zip
+      inner_paths:
+        ratings: ml-100k/u.data
+        genre: ml-100k/u.genre
+        info: ml-100k/u.info
+        item: ml-100k/u.item
+        occupation: ml-100k/u.occupation
+
+resources:
+  ratings:
+    source_name: ml100k_zip
+    filename: u.data
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: "\t"
+      user_col: 0
+      item_col: 1
+      rating_col: 2
+      timestamp_col: 3
+
+  genre:
+    source_name: ml100k_zip
+    filename: u.genre
+    type: content
+    about: items
+  info:
+    source_name: ml100k_zip
+    filename: u.info
+    type: content
+    about: items
+  item:
+    source_name: ml100k_zip
+    filename: u.item
+    type: content
+    about: items
+  occupation:
+    source_name: ml100k_zip
+    filename: u.occupation
+    type: content
+    about: users
+

@@ -1,0 +1,32 @@
+dataset_name: "AmazonBeauty"
+version: "2023"
+
+sources:
+  ratings:
+    source_type: HttpSource
+    size: 559019689
+    args:
+      archive: gz
+      downloadable: True
+      url: https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/benchmark/0core/rating_only/Beauty_and_Personal_Care.csv.gz
+      checksum: 6b9dfce7fca70dd05e1bcf77c1953c40
+      checksum_algorithm: md5
+      filename: Beauty_and_Personal_Care.csv.gz
+      inner_paths:
+        ratings: Beauty_and_Personal_Care.csv
+
+resources:
+  ratings:
+    source_name: ratings
+    filename: Beauty_and_Personal_Care.csv
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: ","
+      user_col: user_id
+      item_col: parent_asin
+      rating_col: rating
+      timestamp_col: timestamp
+      header: 0
+    

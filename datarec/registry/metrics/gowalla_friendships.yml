@@ -1,0 +1,17 @@
+dataset: gowalla
+version: friendships
+computed_at: '2025-12-15T12:22:15.642427+00:00'
+characteristics:
+  n_users: 196591
+  n_items: 196591
+  n_interactions: 1900654
+  space_size: 196.591
+  space_size_log: 2.2935636318083987
+  shape: 1.0
+  shape_log: 0.0
+  density: 4.917855913452399e-05
+  density_log: -4.308224199653671
+  gini_item: 0.6833529689546158
+  gini_user: 0.6833529689546158
+  ratings_per_user: 9.668062118815206
+  ratings_per_item: 9.668062118815206

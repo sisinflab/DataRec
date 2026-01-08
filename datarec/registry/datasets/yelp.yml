@@ -1,0 +1,8 @@
+dataset_name: Yelp
+versions:
+  - v1
+latest_version: v1
+
+source: https://business.yelp.com/data/resources/open-dataset/
+
+description: The Yelp dataset is a subset of Yelp's businesses, reviews, and user data for academic research.

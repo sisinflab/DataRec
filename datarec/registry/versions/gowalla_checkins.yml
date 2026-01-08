@@ -1,0 +1,29 @@
+dataset_name: "Gowalla"
+version: "checkins"
+
+sources:
+  checkins:
+    source_type: HttpSource
+    size: 105470044
+    args:
+      archive: gz
+      downloadable: True
+      url: https://snap.stanford.edu/data/loc-gowalla_totalCheckins.txt.gz
+      checksum: 8ebd5ed2dd376d8982987c49429cb9f9
+      checksum_algorithm: md5
+      filename: loc-gowalla_totalCheckins.txt.gz
+      inner_paths:
+        checkins: loc-gowalla_totalCheckins.txt
+
+resources:
+  checkins:
+    source_name: checkins
+    filename: loc-gowalla_totalCheckins.txt
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: "\t"
+      user_col: 0
+      item_col: 4
+      timestamp_col: 1

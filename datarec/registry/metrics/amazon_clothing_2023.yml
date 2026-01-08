@@ -1,0 +1,17 @@
+dataset: amazon_clothing
+version: '2023'
+computed_at: '2025-12-15T18:29:05.210062+00:00'
+characteristics:
+  n_users: 22553370
+  n_items: 7216886
+  n_interactions: 65179586
+  space_size: 12757.942632173104
+  space_size_log: 4.105780644954536
+  shape: 3.1250833115557044
+  shape_log: 0.49486159968541643
+  density: 4.004518531158031e-07
+  density_log: -6.397449692271609
+  gini_item: 0.8263247764145355
+  gini_user: 0.4949939818552991
+  ratings_per_user: 2.8900153724254958
+  ratings_per_item: 9.03153881050636

@@ -77,6 +77,19 @@ splits = splitter.run(data)
 train, val, test = splits['train'], splits['val'], splits['test']
 ```
 
+### Pipeline paths
+When using YAML pipelines, store only filenames in the steps and pass the base folders at runtime:
+
+```python
+from datarec.pipeline import Pipeline
+
+pipeline = Pipeline.from_yaml("create_pipeline.yml")
+pipeline.apply(input_folder="./data", output_folder="./outputs")
+```
+
+For file loaders use `filename` (instead of `path`) and for export steps use `filename`
+(instead of `output_path`) in the YAML.
+
 ---
 
 ## Datasets 📊

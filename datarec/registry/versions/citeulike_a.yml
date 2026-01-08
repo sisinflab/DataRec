@@ -1,0 +1,121 @@
+dataset_name: "CiteULike"
+version: "a"
+
+sources:
+  ratings:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/users.dat
+      checksum: b384e22f3b6cd9d0c8e11a13066fe70e
+      checksum_algorithm: md5
+      filename: users.dat
+      inner_paths:
+        ratings: users.dat
+  citations:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/citations.dat
+      checksum: 6635e40fc71f862d7338a6990535b99c
+      checksum_algorithm: md5
+      filename: citation.dat
+      inner_paths:
+        citations: citation.dat
+  item-tag:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/item-tag.dat
+      checksum: 600433234dda44e846a40aeb2b211ca3
+      checksum_algorithm: md5
+      filename: item-tag.dat
+      inner_paths:
+        item-tag: item-tag.dat
+  mult:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/mult.dat
+      checksum: 63cca7f5fee224c60eb79a92f1fbecd9
+      checksum_algorithm: md5
+      filename: mult.dat
+      inner_paths:
+        mult: mult.dat
+  tags:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/tags.dat
+      checksum: 406562795523497ec00aaa9121cc9b39
+      checksum_algorithm: md5
+      filename: tags.dat
+      inner_paths:
+        tags: tags.dat
+  vocabulary:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/vocabulary.dat
+      checksum: 4834ecd48c7d073180cdf30973937093
+      checksum_algorithm: md5
+      filename: vocabulary.dat
+      inner_paths:
+        vocabulary: vocabulary.dat
+  raw-data:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      archive: False
+      url: https://raw.githubusercontent.com/js05212/citeulike-a/refs/heads/master/raw-data.csv
+      checksum: ebef07c3e0eebd93b3adaf7ef710b58f
+      checksum_algorithm: md5
+      filename: raw-data.csv
+      inner_paths:
+        raw-data: raw-data.csv
+
+resources:
+    ratings:
+      source_name: ratings
+      filename: users.data
+      type: interactions
+      format: sequence_tabular_implicit
+      required: True
+      schema:
+        col_sep: " "
+
+    citations:
+      source_name: citations
+      filename: citation.dat
+      type: content
+
+    item-tag:
+      source_name: item-tag
+      filename: item-tag.dat
+      type: content
+
+    mult:
+      source_name: mult
+      filename: mult.dat
+      type: content
+
+    tags:
+      source_name: tags
+      filename: tags.dat
+      type: content
+
+    vocabulary:
+      source_name: vocabulary
+      filename: vocabulary.dat
+      type: content
+
+    raw-data:
+      source_name: raw-data
+      filename: raw-data.csv
+      type: content

@@ -147,10 +147,15 @@ class LeaveOneOut(LeaveNOut):
         if not isinstance(validation, bool):
             raise TypeError("validation must be an boolean.")
 
-        test = 1 if test else 0
-        validation = 1 if validation else 0
+        test_n = 1 if test else 0
+        validation_n = 1 if validation else 0
 
-        super().__init__(test_n=test, validation_n=validation, seed=seed)
+        super().__init__(test_n=test_n, validation_n=validation_n, seed=seed)
+        self.params = {
+            "test": test,
+            "validation": validation,
+            "seed": seed,
+        }
 
 
 class LeaveRatioOut(Splitter):

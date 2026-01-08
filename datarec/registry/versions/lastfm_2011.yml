@@ -1,0 +1,59 @@
+dataset_name: "LastFM"
+version: "2011"
+
+sources:
+  lastfm-2k.zip:
+    source_type: HttpSource
+    args:
+      archive: zip
+      downloadable: True
+      url: https://files.grouplens.org/datasets/hetrec2011/hetrec2011-lastfm-2k.zip
+      checksum: 296d61afe4e8632b173fc2dd3be20ce2
+      checksum_algorithm: md5
+      filename: hetrec2011-lastfm-2k.zip
+      inner_paths:
+        ratings: user_artists.dat
+        tags: tags.dat
+        artists: artists.dat
+        user_taggedartists: user_taggedartists.dat
+        user_taggedartists_timestamps: user_taggedartists-timestamps.dat
+        user_friends: user_friends.dat
+
+resources:
+  ratings:
+    source_name: lastfm-2k.zip
+    filename: user_artists.dat
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: "\t"
+      user_col: userID
+      item_col: artistID
+      rating_col: weight
+      header: 0
+  tags:
+    source_name: lastfm-2k.zip
+    filename: tags.dat
+    type: content
+    about: items
+  artists:
+    source_name: lastfm-2k.zip
+    filename: artists.dat
+    type: content
+    about: users
+  user_taggedartists:
+    source_name: lastfm-2k.zip
+    filename: user_taggedartists.dat
+    type: content
+    about: users
+  user_taggedartists_timestamps:
+    source_name: lastfm-2k.zip
+    filename: user_taggedartists_timestamps.dat
+    type: content
+    about: users
+  user_friends:
+    source_name: lastfm-2k.zip
+    filename: user_friends.dat
+    type: content
+    about: users

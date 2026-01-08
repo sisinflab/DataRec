@@ -1,0 +1,17 @@
+dataset: amazon_baby
+version: '2023'
+computed_at: '2025-12-15T18:00:25.687126+00:00'
+characteristics:
+  n_users: 3386206
+  n_items: 217654
+  n_interactions: 5953891
+  space_size: 858.4994354826333
+  space_size_log: 2.933740013921096
+  shape: 15.557747617778677
+  shape_log: 1.1919467219611264
+  density: 8.078316265374725e-06
+  density_log: -5.092679148242243
+  gini_item: 0.8648800449385958
+  gini_user: 0.36108985080926276
+  ratings_per_user: 1.7582778484238704
+  ratings_per_item: 27.354843007709484

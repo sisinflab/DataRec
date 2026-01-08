@@ -1,0 +1,17 @@
+dataset: yelp
+version: v1
+computed_at: '2025-12-15T13:09:00.686934+00:00'
+characteristics:
+  n_users: 1987929
+  n_items: 150346
+  n_interactions: 6990280
+  space_size: 546.6966008985239
+  space_size_log: 2.737746373661808
+  shape: 13.222360421960012
+  shape_log: 1.1213089912105905
+  density: 2.3388470653961263e-05
+  density_log: -4.630998175294749
+  gini_item: 0.678351072470664
+  gini_user: 0.6115362253305341
+  ratings_per_user: 3.51636300894046
+  ratings_per_item: 46.49461907865856

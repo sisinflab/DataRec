@@ -1,0 +1,17 @@
+dataset: mind
+version: small
+computed_at: '2025-12-16T09:06:45.185090+00:00'
+characteristics:
+  n_users: 49108
+  n_items: 33195
+  n_interactions: 5107630
+  space_size: 40.37499300309537
+  space_size_log: 1.6061124600768104
+  shape: 1.4793794246121403
+  shape_log: 0.17007957418774253
+  density: 0.00313324610892637
+  density_log: -2.5040054909941873
+  gini_item: 0.8403493747706466
+  gini_user: 0.7792197590761297
+  ratings_per_user: 104.00810458581087
+  ratings_per_item: 153.8674499171562

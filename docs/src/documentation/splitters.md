@@ -1,6 +1,24 @@
 # Splitters Module Reference
 
-This section provides a detailed API reference for all modules related to splitting datasets into training, validation, and test sets.
+This section provides a detailed API reference for all modules related to **splitting** datasets into training, validation, and test sets.
+Use **uniform** splitters to sample globally, and **user‑stratified** splitters to split each user’s history independently.
+Temporal splitters preserve time ordering when timestamps are available.
+
+## On This Page
+
+- [Core Splitting Utilities](#core-splitting-utilities)
+- [Uniform Splitting Strategies](#uniform-splitting-strategies)
+- [User-Stratified Splitting Strategies](#user-stratified-splitting-strategies)
+
+Minimal usage:
+
+```python
+from datarec.splitters import RandomHoldOut
+
+splitter = RandomHoldOut(test_ratio=0.2, val_ratio=0.1, seed=42)
+splits = splitter.run(datarec)
+train, val, test = splits["train"], splits["val"], splits["test"]
+```
 
 ## Core Splitting Utilities
 

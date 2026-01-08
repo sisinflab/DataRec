@@ -20,7 +20,7 @@ from datarec.splitters import (RandomHoldOut,
                                LeaveRatioOut,
                                LeaveNLast,
                                LeaveRatioLast,
-                               LeaveOneLastItem)
+                               LeaveOneLast)
 
 
 PROCESSORS = [
@@ -109,7 +109,7 @@ SPLITTERS = [
     (LeaveRatioOut, {'test_ratio': 0.2, 'val_ratio': 0.1, 'seed': 42}),
     (LeaveNLast, {'test_n': 1, 'validation_n': 1, 'seed': 42}),
     (LeaveRatioLast, {'test_ratio': 0.2, 'val_ratio': 0.1, 'seed': 42}),
-    (LeaveOneLastItem, {'test': True, 'validation': True, 'seed': 42})
+    (LeaveOneLast, {'test': True, 'validation': True, 'seed': 42})
 ]
 
 @pytest.mark.parametrize("splitter_class, params", SPLITTERS)
@@ -131,6 +131,7 @@ def test_splitter_adds_pipeline_step_to_all_outputs(splitter_class, params, samp
 
 @pytest.mark.parametrize("splitter_class, params", SPLITTERS)
 def test_splitter_pipeline_step_is_correct(splitter_class, params, sample_data_for_splitting):
+    print("\n\n--- parameters:", splitter_class, params)
     splitter_instance = splitter_class(**params)
     result_dict = splitter_instance.run(sample_data_for_splitting)
 
@@ -162,5 +163,5 @@ def test_splitter_chains_after_processor(sample_data_for_splitting):
 
     assert len(test_datarec.pipeline.steps) == 2
     assert test_datarec.pipeline.steps[0].operation == 'UserKCore'
-    assert test_datarec.pipeline.steps[1].operation == 'RatioSplit'
+    assert test_datarec.pipeline.steps[1].operation == 'RandomHoldOut'
     assert test_datarec.pipeline.steps[1].name == 'split'

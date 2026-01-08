@@ -1,0 +1,29 @@
+dataset_name: "Gowalla"
+version: "friendships"
+
+
+sources:
+  friendships:
+    source_type: HttpSource
+    size: 6351523
+    args:
+      archive: gz
+      downloadable: True
+      url: https://snap.stanford.edu/data/loc-gowalla_edges.txt.gz
+      checksum: 68bce8dc51609fe32bbd95e668aaf65e
+      checksum_algorithm: md5
+      filename: loc-gowalla_edges.txt.gz
+      inner_paths:
+        ratings: loc-gowalla_edges.txt
+
+resources:
+  ratings:
+    source_name: friendships
+    filename: loc-gowalla_edges.txt
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: "\t"
+      user_col: 0
+      item_col: 1

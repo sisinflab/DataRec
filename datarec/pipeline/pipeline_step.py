@@ -8,6 +8,10 @@ class PipelineStep:
         self.operation = operation
         self.params = params
 
+    def __str__(self) -> str:
+        params = ", ".join(f"{k}={v!r}" for k, v in self.params.items())
+        return f"{self.name} -> {self.operation}({params})"
+
     def copy(self):
         return PipelineStep(self.name, self.operation, self.params)
 

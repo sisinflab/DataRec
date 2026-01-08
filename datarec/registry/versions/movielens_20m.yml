@@ -1,0 +1,61 @@
+dataset_name: "MovieLens"
+version: "20m"
+
+sources:
+  ml20m_zip:
+    source_type: HttpSource
+    args:
+      archive: zip
+      downloadable: True
+      url: https://files.grouplens.org/datasets/movielens/ml-20m.zip
+      checksum: cd245b17a1ae2cc31bb14903e1204af3
+      checksum_algorithm: md5
+      filename: ml-20m.zip
+      inner_paths:
+        genome_scores: 'ml-20m/genome-scores.csv'
+        genome_tags: 'ml-20m/genome-tags.csv'
+        links: 'ml-20m/links.csv'
+        movies: 'ml-20m/movies.csv'
+        ratings: 'ml-20m/ratings.csv'
+        tags: 'ml-20m/tags.csv'
+
+resources:
+  ratings:
+    source_name: ml20m_zip
+    filename: ratings.csv
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: ","
+      user_col: userId
+      item_col: movieId
+      rating_col: rating
+      timestamp_col: timestamp
+      header: 0
+  genome_scores:
+    source_name: ml20m_zip
+    filename: genome_scores.csv
+    type: content
+    about: items
+  genome_tags:
+    source_name: ml20m_zip
+    filename: genome_tags.csv
+    type: content
+    about: items
+  links:
+    source_name: ml20m_zip
+    filename: links.csv
+    type: content
+    about: items
+  movies:
+    source_name: ml20m_zip
+    filename: movies.csv
+    type: content
+    about: users
+  tags:
+    source_name: ml20m_zip
+    filename: tags.csv
+    type: content
+    about: users
+

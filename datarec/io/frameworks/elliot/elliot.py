@@ -51,7 +51,7 @@ class Elliot(Framework):
 
     DOI = "https://doi.org/10.1145/3404835.3463245"
 
-    CITATION = """
+    CITATION = r"""
             @inproceedings{DBLP:conf/sigir/AnelliBFMMPDN21,
               author       = {Vito Walter Anelli and
                               Alejandro Bellog{\'{\i}}n and

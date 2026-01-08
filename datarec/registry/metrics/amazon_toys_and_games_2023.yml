@@ -1,0 +1,17 @@
+dataset: amazon_toys_and_games
+version: '2023'
+computed_at: '2025-12-15T12:15:00.086095+00:00'
+characteristics:
+  n_users: 8116226
+  n_items: 890667
+  n_interactions: 16052440
+  space_size: 2688.652945759642
+  space_size_log: 3.429534746637998
+  shape: 9.112525781240352
+  shape_log: 0.9596387700376451
+  density: 2.2206062715211785e-06
+  density_log: -5.653528437968423
+  gini_item: 0.8119593755054738
+  gini_user: 0.4065159260942122
+  ratings_per_user: 1.9778207260369536
+  ratings_per_item: 18.02294235668325

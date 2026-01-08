@@ -1,7 +1,8 @@
 import pytest
-from datarec.datasets import AmazonMusic
+from tests.datasets.helpers import dataset_versions, check_dataset
 
 
-def test_load_amazon_music_2023():
-    dataset = AmazonMusic(version='2023')
-    print(dataset)
+@pytest.mark.slow
+@pytest.mark.parametrize("version", dataset_versions("amazon_music"))
+def test_amazon_music(version):
+    check_dataset("amazon_music", version)

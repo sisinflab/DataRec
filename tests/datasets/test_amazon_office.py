@@ -1,7 +1,8 @@
 import pytest
-from datarec.datasets import AmazonOffice
+from tests.datasets.helpers import dataset_versions, check_dataset
 
 
-def test_load_amazon_beauty_2023():
-    dataset = AmazonOffice(version='2023')
-    print(dataset)
+@pytest.mark.slow
+@pytest.mark.parametrize("version", dataset_versions("amazon_office"))
+def test_amazon_office(version):
+    check_dataset("amazon_office", version)

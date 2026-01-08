@@ -1,0 +1,17 @@
+dataset: movielens
+version: 20m
+computed_at: '2025-12-15T12:15:28.698090+00:00'
+characteristics:
+  n_users: 138493
+  n_items: 26744
+  n_interactions: 20000263
+  space_size: 60.8593196807194
+  space_size_log: 1.784327093264329
+  shape: 5.178469937182172
+  shape_log: 0.7142014593596334
+  density: 0.0053998478135544505
+  density_log: -2.267618479929789
+  gini_item: 0.902942497565131
+  gini_user: 0.5807014936671218
+  ratings_per_user: 144.4135299257002
+  ratings_per_item: 747.8411232425965

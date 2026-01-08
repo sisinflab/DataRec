@@ -1,0 +1,28 @@
+dataset_name: Mind
+versions:
+  - "small"
+  - "large"
+latest_version: large
+
+source: https://msnews.github.io/
+
+description: MIcrosoft News Dataset (MIND) is a large-scale dataset for news recommendation research.
+citation: |
+  @inproceedings{DBLP:conf/acl/WuQCWQLLXGWZ20,
+    author       = {Fangzhao Wu and
+                    Ying Qiao and
+                    Jiun{-}Hung Chen and
+                    Chuhan Wu and
+                    Tao Qi and
+                    Jianxun Lian and
+                    Danyang Liu and
+                    Xing Xie and
+                    Jianfeng Gao and
+                    Winnie Wu and
+                    Ming Zhou},
+    title        = {{MIND:} {A} Large-scale Dataset for News Recommendation},
+    booktitle    = {{ACL}},
+    pages        = {3597--3606},
+    publisher    = {Association for Computational Linguistics},
+    year         = {2020}
+  }

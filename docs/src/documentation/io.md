@@ -1,6 +1,28 @@
 # Input/Output Reference
 
-This section provides a detailed API reference for all modules related to data input, output, and framework interoperability in the `datarec` library.
+This section provides a detailed API reference for all modules related to **data input/output** and framework interoperability in the `datarec` library.
+Readers return `RawData`, writers accept `RawData` or `DataRec`, and framework exporters convert datasets to **external formats**.
+
+## On This Page
+
+- [Core I/O Modules](#core-io-modules)
+- [Framework Interoperability](#framework-interoperability)
+
+Minimal usage:
+
+```python
+from datarec.io.readers.transactions.tabular import read_transactions_tabular
+from datarec.io.writers.transactions.tabular import write_transactions_tabular
+
+raw = read_transactions_tabular(
+    "data/interactions.csv",
+    sep=",",
+    user_col="user",
+    item_col="item",
+    rating_col="rating",
+)
+write_transactions_tabular(raw, "out/interactions.tsv", sep="\t")
+```
 
 ## Core I/O Modules
 

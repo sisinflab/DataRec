@@ -6,7 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
-## [1.2.1] - yyyy-mm-dd
+## [1.3.0] - 2026-01-09
+### Added
+- New resource class
+- New source class
+- A novel dataset managment
+- Dataset registry
+- Example datasets download and usage
+- New readers and datasets structure formalism
+- New dataset: CiteULike
+- New writers
+- Pipeline step in rawdata
+
+### Changed
+- All the old dataset classes removed
+- Old readers and writers removed
+- Automatic pipeline step integration
+
+### Fixed
+- Doc: fixed 'pipe' page
+- pyproject.toml for pypi
+- Pipeline export
+
+## [1.2.1] - 2025-10-21
 ### Added
 - Nothing changed
 

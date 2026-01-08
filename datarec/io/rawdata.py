@@ -1,4 +1,8 @@
 import pandas as pd
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from datarec.pipeline.pipeline_step import PipelineStep
 
 
 class RawData:
@@ -8,7 +12,16 @@ class RawData:
     Wraps a `pandas.DataFrame` and stores metadata about user, item, rating, and timestamp columns.
     Provides lightweight methods for slicing, copying, and merging data.
     """
-    def __init__(self, data=None, header=False, user=None, item=None, rating=None, timestamp=None):
+    def __init__(
+            self,
+            data=None,
+            header=False,
+            user=None,
+            item=None,
+            rating=None,
+            timestamp=None,
+            user_encoder=None,
+            item_encoder=None):
         """
         Initialize a RawData object.
 
@@ -19,6 +32,8 @@ class RawData:
             item (str): Column name for item IDs.
             rating (str): Column name for ratings.
             timestamp (str): Column name for timestamps.
+            user_encoder (dict | None): Optional user encoding mapping.
+            item_encoder (dict | None): Optional item encoding mapping.
         """
         self.data = data
         self.header = header
@@ -31,8 +46,28 @@ class RawData:
         self.item = item
         self.rating = rating
         self.timestamp = timestamp
+        # Aliases for consistency with DataRec naming
+        self.user_col = user
+        self.item_col = item
+        self.rating_col = rating
+        self.timestamp_col = timestamp
+        # Aliases for consistency with DataRec naming
+        self.user_col = user
+        self.item_col = item
+        self.rating_col = rating
+        self.timestamp_col = timestamp
+        # Aliases for consistency with DataRec naming
+        self.user_col = user
+        self.item_col = item
+        self.rating_col = rating
+        self.timestamp_col = timestamp
+        # Optional encoders to support streaming/incremental loading
+        self.user_encoder = user_encoder
+        self.item_encoder = item_encoder
 
-    def append(self, new_data):
+        self.pipeline_step: Optional["PipelineStep"] = None  # To track the pipeline step that produced this RawData
+
+    def append(self, new_data) -> None:
         """
         Append new rows to the dataset.
 
@@ -44,7 +79,7 @@ class RawData:
         """
         self.data.append(new_data)
 
-    def copy(self, deep=True):
+    def copy(self, deep=True) -> "RawData":
         """
         Make a copy of the dataset.
 
@@ -55,7 +90,16 @@ class RawData:
             (RawData): A copy of the dataset.
 
         """
-        self.data.copy(deep=deep)
+        return RawData(
+            self.data.copy(deep=deep),
+            header=self.header,
+            user=self.user,
+            item=self.item,
+            rating=self.rating,
+            timestamp=self.timestamp,
+            user_encoder=self.user_encoder,
+            item_encoder=self.item_encoder,
+        )
 
     def __repr__(self):
         """

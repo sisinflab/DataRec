@@ -41,5 +41,6 @@ def test_binarize_missing_rating_column():
     datarec = DataRec(RawData(pd.DataFrame(data), user='user', item='item', timestamp='timestamp'))
     binarizer = Binarize(threshold=3.0)
 
-    with pytest.raises(AttributeError):
+    # Without a rating column, binarization should fail when accessing the missing field
+    with pytest.raises(KeyError):
         binarizer.run(datarec)

@@ -1,7 +1,8 @@
 import pytest
-from datarec.datasets import AmazonBeauty
+from tests.datasets.helpers import dataset_versions, check_dataset
 
 
-def test_load_amazon_beauty_2023():
-    dataset = AmazonBeauty(version='2023')
-    print(dataset)
+@pytest.mark.slow
+@pytest.mark.parametrize("version", dataset_versions("amazon_beauty"))
+def test_amazon_beauty(version):
+    check_dataset("amazon_beauty", version)

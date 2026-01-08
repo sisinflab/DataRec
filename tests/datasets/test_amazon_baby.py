@@ -1,11 +1,8 @@
-from datarec.datasets import AmazonBaby
+import pytest
+from tests.datasets.helpers import dataset_versions, check_dataset
 
 
-def test_load_amazon_baby_2023():
-    dataset = AmazonBaby(version='2023').prepare_and_load()
-    print(dataset)
-
-
-def test_load_amazon_baby_2014():
-    dataset = AmazonBaby(version='2014').prepare_and_load()
-    print(dataset)
+@pytest.mark.slow
+@pytest.mark.parametrize("version", dataset_versions("amazon_baby"))
+def test_amazon_baby(version):
+    check_dataset("amazon_baby", version)

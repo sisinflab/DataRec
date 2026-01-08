@@ -1,0 +1,17 @@
+dataset: ciao
+version: v1
+computed_at: '2025-12-15T18:31:51.468864+00:00'
+characteristics:
+  n_users: 17615
+  n_items: 16121
+  n_interactions: 72665
+  space_size: 16.851451421168445
+  space_size_log: 1.2266373127478747
+  shape: 1.0926741517275602
+  shape_log: 0.0384906695387733
+  density: 0.0002558884315873835
+  density_log: -3.5919493476076516
+  gini_item: 0.6557512489633792
+  gini_user: 0.6631267979210606
+  ratings_per_user: 4.12517740562021
+  ratings_per_item: 4.507474722411761

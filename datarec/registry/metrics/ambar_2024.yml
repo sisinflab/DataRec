@@ -1,0 +1,17 @@
+dataset: ambar
+version: '2024'
+computed_at: '2025-12-15T18:31:48.383232+00:00'
+characteristics:
+  n_users: 31013
+  n_items: 443921
+  n_interactions: 3311462
+  space_size: 117.33423188907831
+  space_size_log: 2.069424734636089
+  shape: 0.06986152941627001
+  shape_log: -1.1557619109718333
+  density: 0.00024053058441535148
+  density_log: -3.618829693517537
+  gini_item: 0.7527298907837248
+  gini_user: 0.26300532146144723
+  ratings_per_user: 106.77657756424725
+  ratings_per_item: 7.4595750144732955

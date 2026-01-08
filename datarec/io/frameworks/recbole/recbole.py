@@ -34,7 +34,7 @@ class RecBole(Framework):
 
     DOI = "https://doi.org/10.1145/3511808.3557680"
 
-    CITATION = """
+    CITATION = r"""
             @inproceedings{DBLP:conf/cikm/ZhaoMHLCPLLWTMF21,
               author       = {Wayne Xin Zhao and
                               Shanlei Mu and
@@ -132,6 +132,5 @@ class RecBole(Framework):
         """.format(path=self.path)
 
         super().info_code()
-
 
 

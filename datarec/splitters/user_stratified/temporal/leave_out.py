@@ -118,7 +118,7 @@ class LeaveNLast(Splitter):
                            step_info={'operation': self.__class__.__name__, 'params': self.params})
 
 
-class LeaveOneLastItem(LeaveNLast):
+class LeaveOneLast(LeaveNLast):
     """
     Special case of LeaveNLast that removes only the last interaction per user for test and validation.
 
@@ -128,7 +128,7 @@ class LeaveOneLastItem(LeaveNLast):
 
     def __init__(self, test: bool = True, validation: bool = True, seed: int = 42):
         """
-        Initializes the LeaveOneLastItem splitter.
+        Initializes the LeaveOneLast splitter.
 
         Args:
             test (bool, optional): Whether to remove the last interaction for the test set. Defaults to True.
@@ -147,6 +147,12 @@ class LeaveOneLastItem(LeaveNLast):
         validation = 1 if validation else 0
 
         super().__init__(test_n=test, validation_n=validation, seed=seed)
+
+        self.params = {
+            "test": test,
+            "validation": validation,
+            "seed": seed,
+        }
 
 
 class LeaveRatioLast(Splitter):

@@ -1,0 +1,79 @@
+dataset_name: "MIND"
+version: "small"
+
+sources:
+  train_archive:
+    source_type: ManualSource
+    args:
+      message: |
+        Microsoft News Dataset (MIND) requires manual download from the source.
+        Please download the dataset from the following link:
+        https://msnews.github.io/#Download
+      archive: zip
+      downloadable: False
+      filename: MINDsmall_train.zip
+      checksum: bd6ae77fa15949653f39829e946d327c
+      checksum_algorithm: md5
+      inner_paths:
+        train: MINDsmall_train/behaviors.tsv
+        entity_embedding: MINDsmall_train/entity_embedding.vec
+        relation_embedding: MINDsmall_train/relation_embedding.vec
+        news: MINDsmall_train/news.tsv
+
+  validation_archive:
+    source_type: ManualSource
+    args:
+      message: |
+        Microsoft News Dataset (MIND) requires manual download from the source.
+        Please download the dataset from the following link:
+        https://msnews.github.io/#Download
+      archive: zip
+      downloadable: False
+      filename: MINDsmall_dev.zip
+      checksum: 1c9e798fe440c1999547211cd5245e3e
+      checksum_algorithm: md5
+      inner_paths:
+        validation: MINDsmall_dev/behaviors.tsv
+        news: MINDsmall_dev/news.tsv
+        entity_embedding: MINDsmall_dev/entity_embedding.vec
+        relation_embedding: MINDsmall_dev/relation_embedding.vec
+
+
+resources:
+  train:
+    type: interactions
+    required: True
+    source_name: train_archive
+    filename: behaviors.tsv
+    format: sequence_tabular_inline
+    schema:
+      user_col: user
+      sequence_col: sequence
+      timestamp_col: time
+      cols:
+        - impression_id
+        - user
+        - time
+        - sequence
+        - impressions
+      col_sep: "\t"
+      sequence_sep: " "
+
+  validation:
+    type: interactions
+    source_name: validation_archive
+    filename: behaviors.tsv
+    format: sequence_tabular_inline
+    schema:
+      user_col: user
+      sequence_col: sequence
+      timestamp_col: time
+      cols:
+        - impression_id
+        - user
+        - time
+        - sequence
+        - impressions
+      col_sep: "\t"
+      sequence_sep: " "
+

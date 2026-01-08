@@ -1,7 +1,7 @@
+from __future__ import annotations  # se vuoi usare le stringhe senza TYPE_CHECKING
+from typing import TYPE_CHECKING
 import os.path
-
 from datarec.io.rawdata import RawData
-from datarec.io import write_tabular
 from datarec.io.frameworks.clayrs.clayrs import ClayRS
 from datarec.io.frameworks.cornac.cornac import Cornac
 from datarec.io.frameworks.daisyrec.daisyrec import DaisyRec
@@ -11,8 +11,10 @@ from datarec.io.frameworks.rechorus.rechorus import ReChorus
 from datarec.io.frameworks.recpack.recpack import RecPack
 from datarec.io.frameworks.recommenders.recommenders import Recommenders
 from datarec.io.frameworks.elliot.elliot import Elliot
-from datarec.data.dataset import DataRec
+from datarec.io.writers.transactions.tabular import write_transactions_tabular
 
+if TYPE_CHECKING:
+    from datarec.data.dataset import DataRec
 
 class FrameworkExporter:
     """
@@ -36,10 +38,10 @@ class FrameworkExporter:
         self.params = {k: v for k, v in locals().items() if k != 'self'}
 
         self.path = output_path
-        self.user = user
-        self.item = item
-        self.rating = rating
-        self.timestamp = timestamp
+        self.user: bool = user
+        self.item: bool = item
+        self.rating: bool = rating
+        self.timestamp: bool = timestamp
 
     def to_clayrs(self, data: RawData):
         """
@@ -47,8 +49,8 @@ class FrameworkExporter:
         Args:
             data (RawData): RawData object to convert to ClayRS format.
         """
-        write_tabular(rawdata=data, path=self.path, sep=',', header=False,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+        write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
 
         ClayRS(timestamp=self.timestamp, path=self.path).info()
 
@@ -58,9 +60,8 @@ class FrameworkExporter:
         Args:
             data (RawData): RawData object to convert to Cornac format.
         """
-        write_tabular(rawdata=data, path=self.path, sep='\t', header=False,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
-
+        write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
         Cornac(timestamp=self.timestamp, path=self.path).info()
 
     def to_daisyrec(self, data: RawData):
@@ -69,8 +70,8 @@ class FrameworkExporter:
         Args:
             data (RawData): RawData object to convert to DaisyRec format.
         """
-        write_tabular(rawdata=data, path=self.path, sep='\t', header=False,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+        write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
 
         DaisyRec(timestamp=self.timestamp, path=self.path).info()
 
@@ -80,8 +81,7 @@ class FrameworkExporter:
         Args:
             data (RawData): RawData object to convert to LensKit format.
         """
-        data.data.rename(columns={data.user: "user", data.item: "item",
-                                  data.rating: "rating"}, inplace=True)
+        data.data.rename(columns={data.user: "user", data.item: "item", data.rating: "rating"}, inplace=True)
         data.user = "user"
         data.item = "item"
         data.rating = "rating"
@@ -91,8 +91,8 @@ class FrameworkExporter:
             data.timestamp = "timestamp"
             data.rating = "rating"
 
-        write_tabular(rawdata=data, path=self.path, sep='\t', header=False,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+        write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
 
         LensKit(timestamp=self.timestamp, path=self.path).info()
 
@@ -115,9 +115,8 @@ class FrameworkExporter:
 
         frmk = RecBole(timestamp=self.timestamp, path=self.path)
         frmk.info()
-
-        write_tabular(rawdata=data, path=frmk.path, sep='\t', header=True,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+        write_transactions_tabular(data=data, filepath=frmk.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
 
     def to_rechorus(self, train_data: RawData, test_data: RawData, val_data: RawData):
         """
@@ -144,8 +143,8 @@ class FrameworkExporter:
                 data.timestamp = "time"
 
             path = os.path.join(frmk.directory, name)
-            write_tabular(rawdata=data, path=path, sep='\t', header=True,
-                          user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+            write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
 
         frmk.info()
 
@@ -169,8 +168,9 @@ class FrameworkExporter:
             data.data.rename(columns={data.timestamp: "timestamp"}, inplace=True)
             data.timestamp = "timestamp"
 
-        write_tabular(rawdata=data, path=frmk.file_path, sep='\t', header=True,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+        write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
+
 
         frmk.info()
 
@@ -191,8 +191,9 @@ class FrameworkExporter:
             data.data.rename(columns={data.timestamp: "timestamp"}, inplace=True)
             data.timestamp = "timestamp"
 
-        write_tabular(rawdata=data, path=frmk.file_path, sep='\t', header=True,
-                      user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+        write_transactions_tabular(data=data, filepath=self.path, sep=',', header=False, 
+                                   include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
+
 
         frmk.info()
 
@@ -213,8 +214,8 @@ class FrameworkExporter:
             if self.timestamp:
                 columns_order.append(data.timestamp)
 
-            write_tabular(rawdata=data, path=name, sep='\t', header=False,
-                          user=self.user, item=self.item, rating=self.rating, timestamp=self.timestamp)
+            write_transactions_tabular(data=data, filepath=name, sep='\t', header=False,
+                          include_user=self.user, include_item=self.item, include_rating=self.rating, include_timestamp=self.timestamp)
 
         frmk.info()
         train_data.pipeline.add_step("export", "Elliot", self.params)

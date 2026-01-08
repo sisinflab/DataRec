@@ -1,0 +1,17 @@
+dataset: tmall
+version: v1
+computed_at: '2025-12-16T09:12:27.582969+00:00'
+characteristics:
+  n_users: 212062
+  n_items: 9790396
+  n_interactions: 27384139
+  space_size: 1440.8924167168068
+  space_size_log: 3.1586315557130478
+  shape: 0.02166020659429915
+  shape_log: -1.6643374054052402
+  density: 1.318973223933264e-05
+  density_log: -4.879764020841857
+  gini_item: 0.5585949565188277
+  gini_user: 0.5412012856445343
+  ratings_per_user: 129.13270175703332
+  ratings_per_item: 2.797040998137358

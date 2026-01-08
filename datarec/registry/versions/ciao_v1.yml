@@ -1,0 +1,51 @@
+dataset_name: CiaoDVD
+version: "v1"
+
+sources:
+  github_archive:
+    source_type: HttpSource
+    size: 5814757
+    args:
+      archive: zip
+      downloadable: True
+      url: https://guoguibing.github.io/librec/datasets/CiaoDVD.zip
+      checksum: 43a39e068e3fc494a7f7f7581293e2c2
+      checksum_algorithm: md5
+      filename: CiaoDVD.zip
+      inner_paths:
+        ratings: movie-ratings.txt
+        reviews: review-ratings.txt
+        friendships: trusts.txt
+        readme: readme.txt
+
+
+resources:
+  ratings:
+    source_name: github_archive
+    filename: movie-ratings.txt
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: ","
+      user_col: 0
+      item_col: 1
+      rating_col: 4
+      timestamp_col: 5
+  reviews:
+    source_name: github_archive
+    filename: review-ratings.txt
+    type: content
+    format: tabular
+    about: items
+  friendships:
+    source_name: github_archive
+    filename: trusts.txt
+    type: content
+    format: tabular
+    about: users
+  readme:
+    source_name: github_archive
+    filename: readme.txt
+    type: documentation
+    format: plaintext

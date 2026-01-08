@@ -1,7 +1,8 @@
 import pytest
-from datarec.datasets import AmazonVideoGames
+from tests.datasets.helpers import dataset_versions, check_dataset
 
 
-def test_load_amazon_videogames_2023():
-    dataset = AmazonVideoGames(version='2023')
-    print(dataset)
+@pytest.mark.slow
+@pytest.mark.parametrize("version", dataset_versions("amazon_videogames"))
+def test_amazon_videogames(version):
+    check_dataset("amazon_videogames", version)

@@ -1,0 +1,17 @@
+dataset: lastfm
+version: '2011'
+computed_at: '2025-12-15T12:21:46.391748+00:00'
+characteristics:
+  n_users: 1892
+  n_items: 17632
+  n_interactions: 92834
+  space_size: 5.77578946984739
+  space_size_log: 0.7616113546187324
+  shape: 0.10730490018148821
+  shape_log: -0.969380445105917
+  density: 0.002782815119924182
+  density_log: -2.555515645647218
+  gini_item: 0.7300996009718888
+  gini_user: 0.01859984137728208
+  ratings_per_user: 49.06659619450317
+  ratings_per_item: 5.265086206896552

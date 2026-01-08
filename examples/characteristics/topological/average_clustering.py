@@ -1,0 +1,26 @@
+from datarec.datasets import Movielens
+
+if __name__ == "__main__":
+    dataset = Movielens(version="100k")
+    dataset.prepare()
+    dr = dataset.load()
+    gr = dr.to_graphrec()
+
+    print("avg clustering dot:", gr.characteristic("average_clustering_coefficient_dot"))
+    print("avg clustering min:", gr.characteristic("average_clustering_coefficient_min"))
+    print("avg clustering max:", gr.characteristic("average_clustering_coefficient_max"))
+    print("avg clustering dot users:", gr.characteristic("average_clustering_coefficient_dot_users"))
+    print("avg clustering dot items:", gr.characteristic("average_clustering_coefficient_dot_items"))
+    print("avg clustering min users:", gr.characteristic("average_clustering_coefficient_min_users"))
+    print("avg clustering min items:", gr.characteristic("average_clustering_coefficient_min_items"))
+    print("avg clustering max users:", gr.characteristic("average_clustering_coefficient_max_users"))
+    print("avg clustering max items:", gr.characteristic("average_clustering_coefficient_max_items"))
+    print("avg clustering dot log:", gr.characteristic("average_clustering_coefficient_dot_log"))
+    print("avg clustering min log:", gr.characteristic("average_clustering_coefficient_min_log"))
+    print("avg clustering max log:", gr.characteristic("average_clustering_coefficient_max_log"))
+    print("avg clustering dot users log:", gr.characteristic("average_clustering_coefficient_dot_users_log"))
+    print("avg clustering dot items log:", gr.characteristic("average_clustering_coefficient_dot_items_log"))
+    print("avg clustering min users log:", gr.characteristic("average_clustering_coefficient_min_users_log"))
+    print("avg clustering min items log:", gr.characteristic("average_clustering_coefficient_min_items_log"))
+    print("avg clustering max users log:", gr.characteristic("average_clustering_coefficient_max_users_log"))
+    print("avg clustering max items log:", gr.characteristic("average_clustering_coefficient_max_items_log"))

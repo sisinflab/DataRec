@@ -1,0 +1,31 @@
+dataset_name: "AmazonClothing"
+version: "2023"
+
+sources:
+  ratings:
+    source_type: HttpSource
+    size: 1395554400
+    args:
+      archive: gz
+      downloadable: True
+      url: https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/benchmark/0core/rating_only/Clothing_Shoes_and_Jewelry.csv.gz
+      checksum: ce282bf3fdd269717486960be26b92e2
+      checksum_algorithm: md5
+      filename: Clothing_Shoes_and_Jewelry.csv.gz
+      inner_paths:
+        ratings: Clothing_Shoes_and_Jewelry.csv
+
+resources:
+  ratings:
+    source_name: ratings
+    filename: Clothing_Shoes_and_Jewelry.csv
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: ","
+      user_col: user_id
+      item_col: parent_asin
+      rating_col: rating
+      timestamp_col: timestamp
+      header: 0

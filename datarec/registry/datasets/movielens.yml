@@ -1,0 +1,21 @@
+dataset_name: Movielens
+versions:
+  - "100k"
+  - "1m"
+  - "20m"
+latest_version: "1m"
+
+source: https://grouplens.org/datasets/movielens/
+
+description: The MovieLens datasets are a collection of movie ratings data collected by the GroupLens Research project at the University of Minnesota.
+citation: |
+  @article{DBLP:journals/tiis/HarperK16,
+  author       = {F. Maxwell Harper and
+                  Joseph A. Konstan},
+  title        = {The MovieLens Datasets: History and Context},
+  journal      = {{ACM} Trans. Interact. Intell. Syst.},
+  volume       = {5},
+  number       = {4},
+  pages        = {19:1--19:19},
+  year         = {2016}
+  }

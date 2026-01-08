@@ -1,10 +1,10 @@
 dataset_name: Ambar
 versions:
   - "2024"
-latest_version: 2024
+latest_version: "2024"
+
 source: https://github.com/davidcontrerasaguilar/AMBAR
-datarec_class: datarec.datasets.ambar.ambar.Ambar
-datarec_module: datarec.datasets.ambar
+
 description: The AMBAR dataset is a dataset in the music domain. It contains both user feedback and
     attributes, including sensitive features. The users have been anonymized.
 citation: |

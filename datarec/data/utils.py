@@ -47,7 +47,7 @@ def set_column_name(columns: list, value: Union[str, int], rename=True, default_
                 raise ValueError(f'column int \'{value}\' is out of range ({len(columns)} columns).')
             selected_column = columns[value]
     else:
-        raise ValueError(f'column value must be either a string (column name) or an integer (column index)')
+        raise ValueError(f'column value must be either a string (column name) or an integer (column index). Got {type(value)} instead.')
 
     if rename is True:
         columns[columns.index(selected_column)] = default_name
@@ -143,7 +143,7 @@ def verify_checksum(file_path: str, checksum: str) -> None:
     """
     
     if not os.path.isfile(file_path):
-        raise FileNotFoundError(f'File \'{file_path}\ not found.')
+        raise FileNotFoundError(f"File '{file_path}' not found.")
 
     md5 = hashlib.md5()
     with open(file_path, "rb") as f:
@@ -156,3 +156,153 @@ def verify_checksum(file_path: str, checksum: str) -> None:
                            f"The file may be corrupted or a new version has been downloaded.")
 
     print(f'Checksum verified.')
+
+
+
+class Encoder:
+    """
+    A simple encoder class to encode and decode IDs.
+    """
+
+    def __init__(self):
+        self.encoding = dict()
+
+    def is_encoded(self) -> bool:
+        """
+        Checks if the encoding dictionary is not empty.
+
+        Returns:
+            (bool): True if the encoding dictionary is not empty, False otherwise.
+        """
+        return bool(self.encoding)
+
+    def build_encoding(self, lst: list, offset: int=0) -> None:
+        """
+        Encodes a list of public IDs into integer IDs.
+
+        Args:
+            lst (list): A list of public IDs.
+            offset (int): The starting integer for the private IDs.
+        """
+        if self.is_encoded():
+            raise ValueError('Encoding dictionary is not empty. Please, reset it before building a new encoding.')
+        self.encoding = dict(zip(lst, range(offset, offset + len(lst))))
+
+    def reset_encoding(self) -> None:
+        """
+        Resets the encoding dictionary.
+        """
+        self.encoding = dict()
+
+    def change_offset(self, offset: int) -> None:
+        """
+        Changes the offset of the current encoding.
+
+        Args:
+            offset (int): The new starting integer for the private IDs.
+        """
+        if not self.encoding:
+            raise ValueError('Encoding dictionary is empty. Please, build the encoding first.')
+        lst = list(self.encoding.values())
+        current_min = min(lst)
+        new_offset = offset - current_min
+        self.encoding = {idx: el + new_offset for idx, el in self.encoding.items()}
+
+    def apply_encoding(self, encoding: dict) -> None:
+        """
+        Applies an external encoding dictionary.
+
+        Args:
+            encoding (dict): A dictionary encoding IDs.
+        """
+        if self.is_encoded():
+            raise ValueError('Encoding dictionary is not empty. Please, reset it before applying a new encoding.')
+        self.encoding = encoding
+    
+    def encode(self, lst: list) -> list:
+        """
+        Encodes a list of public IDs into integer IDs using the built encoding.
+
+        Args:
+            lst (list): A list of public IDs.
+
+        Returns:
+            (list): A list of encoded integer IDs.
+        """
+        if self.is_encoded() is False:
+            raise ValueError('Encoding dictionary is empty. Please, build the encoding first.')
+        return [self.encoding[el] for el in lst]
+
+    def decode(self, lst: list) -> list:
+        """
+        Creates a reverse mapping from private IDs back to public IDs.
+
+        Args:
+            lst (list): A list of private IDs.
+
+        Returns:
+            (list): A list of decoded public IDs.
+        """
+        if self.is_encoded() is False:
+            raise ValueError('Encoding dictionary is empty. Please, build the encoding first.')
+        decoder = {el: idx for idx, el in self.encoding.items()}
+        if len(decoder) != len(self.encoding):
+            print('WARNING: the ID encoding could be incorrect. Please, check your data.')
+        return [decoder[el] for el in lst]
+    
+
+class IncrementalEncoder:
+    """
+    Streaming-friendly encoder that assigns integer IDs incrementally.
+
+    Preserves reproducibility by keeping both forward (public -> int)
+    and reverse (int -> public) mappings without requiring the full list upfront.
+    """
+
+    def __init__(self, offset: int = 0):
+        self.offset = offset
+        self._forward: dict = {}          # public -> int
+        self._reverse: list = []          # index -> public (index = id - offset)
+
+    def __len__(self):
+        return len(self._forward)
+
+    def encode_one(self, key):
+        """
+        Encode a single key, creating a new id if unseen.
+        """
+        if key in self._forward:
+            return self._forward[key]
+        idx = self.offset + len(self._forward)
+        self._forward[key] = idx
+        self._reverse.append(key)
+        return idx
+
+    def encode_many(self, iterable):
+        """
+        Encode an iterable of keys, returning a list of int ids.
+        """
+        return [self.encode_one(k) for k in iterable]
+
+    def decode_one(self, idx: int):
+        """
+        Decode a single id back to the original key.
+        """
+        pos = idx - self.offset
+        if pos < 0 or pos >= len(self._reverse):
+            raise KeyError(f"Id {idx} not in encoder")
+        return self._reverse[pos]
+
+    def decode_many(self, iterable):
+        """
+        Decode an iterable of ids back to original keys.
+        """
+        return [self.decode_one(i) for i in iterable]
+
+    @property
+    def forward(self):
+        return self._forward
+
+    @property
+    def reverse(self):
+        return self._reverse

@@ -1,0 +1,17 @@
+dataset: amazon_videogames
+version: '2023'
+computed_at: '2025-12-15T18:31:35.946016+00:00'
+characteristics:
+  n_users: 2766656
+  n_items: 137249
+  n_interactions: 4555500
+  space_size: 616.2148727059418
+  space_size_log: 2.789732176058451
+  shape: 20.157931933930303
+  shape_log: 1.304445974412738
+  density: 1.1996973480987134e-05
+  density_log: -4.920928301142955
+  gini_item: 0.8571064226609856
+  gini_user: 0.3353671504827272
+  ratings_per_user: 1.646572613292003
+  ratings_per_item: 33.19149866301394

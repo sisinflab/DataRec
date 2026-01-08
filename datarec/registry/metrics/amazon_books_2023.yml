@@ -1,0 +1,17 @@
+dataset: amazon_books
+version: '2023'
+computed_at: '2025-12-15T18:20:17.157097+00:00'
+characteristics:
+  n_users: 10297355
+  n_items: 4446065
+  n_interactions: 29139329
+  space_size: 6766.292164699586
+  space_size_log: 3.8303507464489135
+  shape: 2.3160603814834015
+  shape_log: 0.3647498775956473
+  density: 6.364701700188797e-07
+  density_log: -6.196221945976983
+  gini_item: 0.7336893261122213
+  gini_user: 0.5401752191408588
+  ratings_per_user: 2.8297877464649903
+  ratings_per_item: 6.55395928759476

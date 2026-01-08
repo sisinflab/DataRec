@@ -3,7 +3,7 @@ import pandas as pd
 from datarec import DataRec, RawData
 from datarec.splitters.uniform import RandomHoldOut, TemporalHoldOut
 from datarec.splitters.user_stratified import (UserStratifiedHoldOut, LeaveRatioOut, LeaveRatioLast,
-                                               LeaveOneLastItem, LeaveNLast, LeaveNOut, LeaveOneOut)
+                                               LeaveOneLast, LeaveNLast, LeaveNOut, LeaveOneOut)
 
 
 @pytest.fixture
@@ -22,7 +22,7 @@ def sample_datarec():
                                               (UserStratifiedHoldOut, {"test_ratio": 0.2, "val_ratio": 0.2, "seed": 42}),
                                               (LeaveRatioOut, {"test_ratio": 0.2, "val_ratio": 0.2, "seed": 42}),
                                               (LeaveRatioLast, {"test_ratio": 0.2, "val_ratio": 0.2, "seed": 42}),
-                                              (LeaveOneLastItem, {"test": True, "validation": True, "seed": 42}),
+                                              (LeaveOneLast, {"test": True, "validation": True, "seed": 42}),
                                               (LeaveOneOut, {"test": True, "validation": True, "seed": 42}),
                                               (LeaveNLast, {"test_n": 2, "validation_n": 2, "seed": 42}),
                                               (LeaveNOut, {"test_n": 2, "validation_n": 2, "seed": 42})])

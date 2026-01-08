@@ -1,0 +1,17 @@
+dataset: amazon_beauty
+version: '2023'
+computed_at: '2025-12-15T12:21:43.722712+00:00'
+characteristics:
+  n_users: 11325787
+  n_items: 1028731
+  n_interactions: 23591312
+  space_size: 3413.383685772374
+  space_size_log: 3.5331851084509505
+  shape: 11.009473808021728
+  shape_log: 1.0417665625926829
+  density: 2.024798812171433e-06
+  density_log: -5.693618122624369
+  gini_item: 0.8549725671297695
+  gini_user: 0.42172362782257544
+  ratings_per_user: 2.0829733068439307
+  ratings_per_item: 22.932440064506658

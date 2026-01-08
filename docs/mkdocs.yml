@@ -52,6 +52,8 @@ plugins:
 
 markdown_extensions:
   - admonition
+  - toc:
+      toc_depth: 2
   - pymdownx.superfences
   - pymdownx.highlight:
       anchor_linenums: true
@@ -80,7 +82,11 @@ nav:
       - Datasets: documentation/datasets.md
       - Processing: documentation/processing.md
       - Splitters: documentation/splitters.md
-      - Pipe: documentation/pipe.md
       - Pipeline: documentation/pipeline.md
+      - Registry: documentation/registry.md
   - Tutorial: tutorial.md
 
+# Keep generated dataset pages buildable without listing them in nav.
+not_in_nav: |
+  assets/pages/datasets/*.md
+  assets/pages/data_formats.md

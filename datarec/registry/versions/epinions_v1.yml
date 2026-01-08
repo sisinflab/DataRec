@@ -1,0 +1,28 @@
+dataset_name: "Epinions"
+version: "v1"
+
+sources:
+  trust:
+    source_type: HttpSource
+    args:
+      archive: gz
+      downloadable: True
+      url: https://snap.stanford.edu/data/soc-Epinions1.txt.gz
+      checksum: 8df7433d4486ba68eb25e623feacff04
+      checksum_algorithm: md5
+      filename: soc-Epinions1.txt.gz
+      inner_paths:
+        trust: soc-Epinions1.txt
+
+resources:
+  trust:
+    source_name: trust
+    filename: soc-Epinions1.txt
+    type: interactions
+    format: transactions_tabular
+    required: True
+    schema:
+      sep: "\t"
+      user_col: 0
+      item_col: 1
+      skiprows: 4

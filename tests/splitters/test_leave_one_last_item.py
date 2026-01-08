@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 from datarec import DataRec, RawData
-from datarec.splitters.user_stratified import LeaveOneLastItem
+from datarec.splitters.user_stratified import LeaveOneLast
 
 
 @pytest.fixture
@@ -17,13 +17,13 @@ def sample_datarec():
 
 def test_leave_one_last_item_initialization():
     with pytest.raises(TypeError):
-        LeaveOneLastItem(test="True")
+        LeaveOneLast(test="True")
     with pytest.raises(TypeError):
-        LeaveOneLastItem(validation=1)
+        LeaveOneLast(validation=1)
 
 
 def test_leave_one_last_item_splitting(sample_datarec):
-    splitter = LeaveOneLastItem(test=True, validation=True)
+    splitter = LeaveOneLast(test=True, validation=True)
     result = splitter.run(sample_datarec)
 
     test = result["test"].data

@@ -2,11 +2,13 @@ import math
 import warnings
 import pandas as pd
 import numpy as np
-from typing import Union, Optional
+from typing import Union, Optional, Any
 from collections import Counter
-from .utils import set_column_name, quartiles, popularity
+from .utils import set_column_name, quartiles, popularity, Encoder
 from datarec.io.rawdata import RawData
 from datarec.pipeline import Pipeline
+from datarec.data.characteristics import CHARACTERISTICS
+from datarec.io import paths
 
 DATAREC_USER_COL = 'user_id'
 DATAREC_ITEM_COL = 'item_id'
@@ -34,6 +36,7 @@ class DataRec:
             dataset_name: str = 'datarec',
             version_name: str = 'no_version_provided',
             pipeline: Optional[Pipeline] = None,
+            registry_dataset: bool = False,
             *args,
             **kwargs
     ):
@@ -49,6 +52,7 @@ class DataRec:
             version_name (str): A version identifier 
                 for the dataset.
             pipeline (Pipeline): A pipeline object to track preprocessing steps.
+            registry_dataset (bool): Whether the DataRec derives from a registered dataset.
             
         """
         self.path = None
@@ -56,17 +60,29 @@ class DataRec:
         self.dataset_name = dataset_name
         self.version_name = version_name
 
-        if pipeline:
-            self.pipeline = pipeline
-        else:
-            self.pipeline = Pipeline()
-            self.pipeline.add_step("load", self.dataset_name, {'version': self.version_name})
-
+        rawdata_step = None
         if rawdata is not None:
             if copy:
                 self._data: pd.DataFrame = rawdata.data.copy()
             else:
                 self._data: pd.DataFrame = rawdata.data
+            
+            if rawdata.pipeline_step is not None:
+                rawdata_step = rawdata.pipeline_step
+        
+        # PIPELINE INITIALIZATION
+        if pipeline:
+            self.pipeline = pipeline
+        else:
+            if registry_dataset:
+                self.pipeline = Pipeline()
+                self.pipeline.add_step("load", "registry_dataset", {"dataset_name": self.dataset_name, "version": self.version_name})
+            elif rawdata_step is not None:
+                self.pipeline = Pipeline()
+                self.pipeline.steps.append(rawdata_step)
+            else:
+                warnings.warn("No pipeline provided. Initializing empty pipeline.")
+                self.pipeline = Pipeline()
 
         # ------------------------------------
         # --------- STANDARD COLUMNS ---------
@@ -81,37 +97,28 @@ class DataRec:
         if rawdata:
             self.set_columns(rawdata)
 
-        # dataset is assumed to be the public version of the dataset
-        self._is_private = False
-        self.__implicit = False
+        # map users and items with a 0-indexed mapping
+        self.user_id_encoder = Encoder()
+        self.item_id_encoder = Encoder()
+        
+        # Apply external encoders (e.g., from streaming readers) if provided
+        if rawdata is not None:
+            if getattr(rawdata, "user_encoder", None):
+                self.user_id_encoder.apply_encoding(rawdata.user_encoder)
+            if getattr(rawdata, "item_encoder", None):
+                self.item_id_encoder.apply_encoding(rawdata.item_encoder)
 
         # ------------------------------
         # --------- PROPERTIES ---------
         self._sorted_users = None
         self._sorted_items = None
 
-        # map users and items with a 0-indexed mapping
-        self._public_to_private_users = None
-        self._public_to_private_items = None
-        self._private_to_public_users = None
-        self._private_to_public_items = None
-
-        # metrics
+        self._n_users = None
+        self._n_items = None
         self._transactions = None
-        self._space_size = None
-        self._space_size_log = None
-        self._shape = None
-        self._shape_log = None
-        self._density = None
-        self._density_log = None
-        self._gini_item = None
-        self._gini_user = None
-        self._ratings_per_user = None
-        self._ratings_per_item = None
 
-        # more analyses
-        self.metrics = ['transactions', 'space_size', 'space_size_log', 'shape', 'shape_log', 'density', 'density_log',
-                        'gini_item', 'gini_user', 'ratings_per_user', 'ratings_per_item']
+        self.characteristics = CharacteristicAccessor(self)
+        
 
     def __str__(self):
         """
@@ -176,24 +183,11 @@ class DataRec:
         density, Gini indices, shape, ratings per user/item) and empties the list 
         of assigned columns. It is automatically called when the underlying data is changed.
         """
-        self._sorted_users = None
-        self._sorted_items = None
-        self._transactions = None
-        self._space_size = None
-        self._space_size_log = None
-        self._shape = None
-        self._shape_log = None
-        self._density = None
-        self._density_log = None
-        self._gini_item = None
-        self._gini_user = None
-        self._ratings_per_user = None
-        self._ratings_per_item = None
 
         self.__assigned_columns = []
 
     @property
-    def data(self):
+    def data(self) -> pd.DataFrame:
         """
         The underlying pandas DataFrame holding the interaction data.
         """
@@ -383,7 +377,6 @@ class DataRec:
             self._sorted_users = dict(zip(count_users.index, count_users[self.item_col]))
         return self._sorted_users
 
-    # --- MAPPING FUNCTIONS ---
     @property
     def transactions(self):
         """
@@ -393,213 +386,137 @@ class DataRec:
             self._transactions = len(self.data)
         return self._transactions
 
-    @staticmethod
-    def public_to_private(lst, offset=0):
+    # --- ID ENCODING/DECODING FUNCTIONS ---
+
+    def is_encoded(self, on:str) -> bool:
         """
-        Creates a mapping from public (original) IDs to private (integer) IDs.
+        Checks if user or item IDs are encoded to private integer IDs.
 
         Args:
-            lst (list): A list of public IDs.
+            on (str): 'users' to check user encoding, 'items' for item encoding.
+        Returns:
+            (bool): True if the specified IDs are encoded, False otherwise.
+        """
+        if on == 'users':
+            return self.user_id_encoder.is_encoded()
+        elif on == 'items':
+            return self.item_id_encoder.is_encoded()
+        else:
+            raise ValueError("Parameter 'on' must be either 'users' or 'items'.")
+        
+
+    def encode(self, users=True, items=True) -> None:
+        """
+        Converts user and item IDs to encoded integer IDs.
+        Args:
+            users (bool): If True, encodes user IDs.
+            items (bool): If True, encodes item IDs.
+        """
+        if users:
+            if not self.user_id_encoder.is_encoded():
+                raise ValueError("User encoder is empty. Build or apply an encoding before calling encode().")
+            self.data[self.user_col] = self.user_id_encoder.encode(self.data[self.user_col].tolist())
+        if items:
+            if not self.item_id_encoder.is_encoded():
+                raise ValueError("Item encoder is empty. Build or apply an encoding before calling encode().")
+            self.data[self.item_col] = self.item_id_encoder.encode(self.data[self.item_col].tolist())
+
+    def decode(self, users=True, items=True) -> None:
+        """
+        Converts user and item IDs back to original IDs.
+        Args:
+            users (bool): If True, encodes user IDs.
+            items (bool): If True, encodes item IDs.
+        """
+        if users:
+            self.data[self.user_col] = self.user_id_encoder.decode(self.data[self.user_col].tolist())
+        if items:
+            self.data[self.item_col] = self.item_id_encoder.decode(self.data[self.item_col].tolist())
+
+    def reset_encoding(self, on='all') -> None:
+        """
+        Resets the encoding for users or items.
+        
+        Args:
+            on (str): 'users' to reset user encoding, 'items' for item encoding.
+        """
+        if on == 'users':
+            self.decode(users=True, items=False)
+            self.user_id_encoder.reset_encoding()
+        elif on == 'items':
+            self.decode(users=False, items=True)
+            self.item_id_encoder.reset_encoding()
+        elif on == 'all':
+            self.decode(users=True, items=True)
+            self.user_id_encoder.reset_encoding()
+            self.item_id_encoder.reset_encoding()
+        else:
+            raise ValueError("Parameter 'on' must be either 'users' or 'items'.")
+
+
+    def build_encoding(self, on='users', offset=0) -> None:
+        """
+        Builds the encoding for users or items.
+
+        Args:
+            on (str): 'users' to build user encoding, 'items' for item encoding, 'all' for both.
             offset (int): The starting integer for the private IDs.
+        """
+        if on == 'users':
+            self.user_id_encoder.build_encoding(self.users, offset=offset)
+        elif on == 'items':
+            self.item_id_encoder.build_encoding(self.items, offset=offset)
+        elif on == 'all':
+            self.user_id_encoder.build_encoding(self.users, offset=offset)
+            self.item_id_encoder.build_encoding(self.items, offset=offset)
+        else:
+            raise ValueError("Parameter 'on' must be either 'users' or 'items'.")
+        
+
+    # -- CHARACTERISTICS --
+
+    def characteristic(self, name: str, **kwargs: Any) -> Any:
+        """
+        Retrieves a calculated dataset characteristic by name.
+
+        Args:
+            name (str): The name of the characteristic to retrieve.
+            **kwargs: Additional arguments to pass to the characteristic function.
 
         Returns:
-            (dict): A dictionary mapping public IDs to private integer IDs.
+            The value of the requested characteristic.
         """
-        return dict(zip(lst, range(offset, offset + len(lst))))
+        return getattr(self.characteristics, name)(**kwargs)
+    
+    def space_size(self, **kwargs):
+        return self.characteristic("space_size", **kwargs)
 
-    @staticmethod
-    def private_to_public(pub_to_prvt: dict):
-        """
-        Creates a reverse mapping from private IDs back to public IDs.
+    def space_size_log(self, **kwargs):
+        return self.characteristic("space_size_log", **kwargs)
 
-        Args:
-            pub_to_prvt (dict): A dictionary mapping public IDs to private IDs.
+    def shape(self, **kwargs):
+        return self.characteristic("shape", **kwargs)
 
-        Returns:
-            (dict): A dictionary mapping private IDs to public IDs.
-        """
-        mapping = {el: idx for idx, el in pub_to_prvt.items()}
-        if len(pub_to_prvt) != len(mapping):
-            print('WARNING: private to public mapping could be incorrect. Please, check your code.')
-        return mapping
+    def shape_log(self, **kwargs):
+        return self.characteristic("shape_log", **kwargs)
 
-    def map_users_and_items(self, offset=0, items_shift=False):
-        """
-        Generates the public-to-private and private-to-public ID mappings.
+    def density(self, **kwargs):
+        return self.characteristic("density", **kwargs)
 
-        This method creates the dictionaries needed to convert user and item IDs
-        to a dense, zero-indexed integer range suitable for machine learning models.
+    def density_log(self, **kwargs):
+        return self.characteristic("density_log", **kwargs)
 
-        Args:
-            offset (int): The starting integer for the ID mappings. Defaults to 0.
-            items_shift (bool): If True, item private IDs will start after the last
-                user private ID, creating a single contiguous ID space. Defaults to False.
-        """
-        # map users and items with a 0-indexed mapping
-        users_offset = offset
-        items_offset = offset
+    def gini_item(self, **kwargs):
+        return self.characteristic("gini_item", **kwargs)
 
-        # users
-        self._public_to_private_users = self.public_to_private(self.users, offset=users_offset)
-        self._private_to_public_users = self.private_to_public(self._public_to_private_users)
+    def gini_user(self, **kwargs):
+        return self.characteristic("gini_user", **kwargs)
 
-        # items
-        if items_shift:
-            items_offset = offset + self.n_users
-        self._public_to_private_items = self.public_to_private(self.items, offset=items_offset)
-        self._private_to_public_items = self.private_to_public(self._public_to_private_items)
+    def ratings_per_user(self, **kwargs):
+        return self.characteristic("ratings_per_user", **kwargs)
 
-    def map_dataset(self, user_mapping, item_mapping):
-        """
-        Applies ID mappings to the user and item columns of the DataFrame.
-
-        This is an in-place operation that modifies the internal DataFrame.
-
-        Args:
-            user_mapping (dict): The dictionary to map user IDs.
-            item_mapping (dict): The dictionary to map item IDs.
-        """
-        self.data[self.user_col] = self.data[self.user_col].map(user_mapping)
-        self.data[self.item_col] = self.data[self.item_col].map(item_mapping)
-
-    def to_public(self):
-        """
-        Converts user and item IDs back to their original (public) values.
-        """
-        if self._is_private:
-            self.map_dataset(self._private_to_public_users, self._private_to_public_items)
-        self._is_private = False
-
-    def to_private(self):
-        """
-        Converts user and item IDs to their dense, zero-indexed (private) integer values.
-        """
-        if not self._is_private:
-            self.map_dataset(self._public_to_private_users, self._public_to_private_items)
-        self._is_private = True
-
-    # -- METRICS --
-    def get_metric(self, metric):
-        """
-        Retrieves a calculated dataset metric by name.
-
-        Args:
-            metric (str): The name of the metric to compute (e.g., 'density', 'gini_user').
-
-        Returns:
-            The value of the computed metric.
-        """
-        assert metric in self.metrics, f'{self.__class__.__name__}: metric \'{metric}\' not found.'
-        func = getattr(self, metric)
-        return func()
-
-    @property
-    def space_size(self):
-        """
-        Calculates the scaled square root of the user-item interaction space.
-        """
-        if self._space_size is None:
-            scale_factor = 1000
-            self._space_size = math.sqrt(self.n_users * self.n_items) / scale_factor
-        return self._space_size
-
-    @property
-    def space_size_log(self):
-        """
-        Calculates the log10 of the space_size metric.
-        """
-        if self._space_size_log is None:
-            self._space_size_log = math.log10(self.space_size)
-        return self._space_size_log
-
-    @property
-    def shape(self):
-        """
-        Calculates the shape of the interaction matrix (n_users / n_items).
-        """
-        if self._shape is None:
-            self._shape = self.n_users / self.n_items
-        return self._shape
-
-    @property
-    def shape_log(self):
-        """
-        Calculates the log10 of the shape metric.
-        """
-        if self._shape_log is None:
-            self._shape_log = math.log10(self.shape)
-        return self._shape_log
-
-    @property
-    def density(self):
-        """
-        Calculates the density of the user-item interaction matrix.
-        """
-        if self._density is None:
-            self._density = self.transactions / (self.n_users * self.n_items)
-        return self._density
-
-    @property
-    def density_log(self):
-        """
-        Calculates the log10 of the density metric.
-        """
-        if self._density_log is None:
-            self._density_log = math.log10(self.density)
-        return self._density_log
-
-    @staticmethod
-    def gini(x):
-        """
-        Calculates the Gini coefficient for a numpy array.
-
-        Args:
-            x (np.ndarray): An array of non-negative values.
-
-        Returns:
-            (float): The Gini coefficient, a measure of inequality.
-        """
-        x = np.sort(x)  # O(n log n)
-        n = len(x)
-        cum_index = np.arange(1, n + 1)
-        return (np.sum((2 * cum_index - n - 1) * x)) / (n * np.sum(x))
-
-
-    @property
-    def gini_item(self):
-        """
-        Calculates the Gini coefficient for item popularity.
-        """
-        if self._gini_item is None:
-            self._gini_item = self.gini(np.array(list(self.sorted_items.values())))
-        return self._gini_item
-
-    @property
-    def gini_user(self):
-        """
-        Calculates the Gini coefficient for user activity.
-        """
-        if self._gini_user is None:
-            self._gini_user = self.gini(np.array(list(self.sorted_users.values())))
-        return self._gini_user
-
-    @property
-    def ratings_per_user(self):
-        """
-        Calculates the average number of ratings per user.
-        """
-        if self._ratings_per_user is None:
-            self._ratings_per_user = self.transactions / self.n_users
-        return self._ratings_per_user
-
-    @property
-    def ratings_per_item(self):
-        """
-        Calculates the average number of ratings per item.
-        """
-        if self._ratings_per_item is None:
-            self._ratings_per_item = self.transactions / self.n_items
-        return self._ratings_per_item
+    def ratings_per_item(self, **kwargs):
+        return self.characteristic("ratings_per_item", **kwargs)
 
     def users_frequency(self):
         """
@@ -683,6 +600,17 @@ class DataRec:
         """
         return popularity(self.items_quartiles())
 
+    def list_characteristics(self) -> list[str]:
+        """Return the names of all characteristics that can be computed on this dataset."""
+        return sorted(CHARACTERISTICS.keys())
+
+    def describe_characteristics(self) -> dict[str, str]:
+        """Return a mapping name -> short docstring for each available characteristic."""
+        return {
+            name: (func.__doc__ or "").strip()
+            for name, func in CHARACTERISTICS.items()
+        }
+
     def copy(self):
         """
         Create a deep copy of the current DataRec object.
@@ -700,12 +628,10 @@ class DataRec:
                          pipeline=pipeline,
                          copy=True)
 
-        new_dr.__implicit = self.__implicit
         new_dr._user_col = self.user_col
         new_dr._item_col = self.item_col
         new_dr._rating_col = self.rating_col
         new_dr._timestamp_col = self.timestamp_col
-        new_dr._is_private = self._is_private
         return new_dr
 
     def to_rawdata(self):
@@ -739,7 +665,7 @@ class DataRec:
 
         print(f'Pipeline correctly saved to {filepath}')
 
-    def to_torch_dataset(self, task="pointwise", autoprepare=True, **kwargs):
+    def to_torch_dataset(self, task: str = "pointwise", autoprepare: bool = True, **kwargs: Any) -> Any:
         """
         Converts the current DataRec object into a PyTorch-compatible dataset.
 
@@ -774,7 +700,7 @@ class DataRec:
 
         if autoprepare:
             self.map_users_and_items()
-            self.to_private()
+            self.encode()
         else:
             warnings.warn(
                 "Autoprepare is set to False. "
@@ -792,38 +718,87 @@ class DataRec:
             return RankingTorchDataset(self, **kwargs)
         else:
             raise ValueError(f"Unknown task: {task}")
+        
+    def to_graphrec(self):
+        """
+        Converts the current DataRec object into a GraphRec object.
 
+        This method creates a GraphRec instance representing the bipartite graph
+        of user-item interactions contained in the DataRec object.
 
-def share_info(datarec_source: DataRec, datarec_target: DataRec) -> None:
-    """
-    Copy dataset metadata and mappings from one DataRec object to another
+        Returns:
+            (GraphRec): A new GraphRec object representing the interaction graph.
+        """
+        from datarec.data.graph import GraphRec
+        return GraphRec(self)
     
-    This function transfers core attributes from a source DataRec
-    to a target DataRec. 
+    def to_pickle(self, filepath: str = '') -> None:
+        """
+        Save the current DataRec object to a pickle file.
+
+        Args:
+            filepath (str): The path (including filename) where the pickle file will be saved.
+        """
+        import pickle
+
+        if filepath == '':
+            filepath = paths.pickle_version_filepath(self.dataset_name, self.version_name)
+
+        print(f'Saving DataRec to {filepath}')
+
+        with open(filepath, 'wb') as f:
+            pickle.dump(self, f)
+
+        print(f'DataRec correctly saved to {filepath}')
+
+
+class CharacteristicAccessor:
+    """
+    Accessor for dataset characteristics.
+    Allows dynamic retrieval of dataset characteristics as attributes.
     
     Args:
-        datarec_source (DataRec): The source DataRec from which information 
-            is copied.
-        datarec_target (DataRec): The target DataRec that will be updated 
-            with the source information.
-
+        dr (DataRec): The DataRec object to access characteristics from.
     """
-    ds = datarec_source
-    dt = datarec_target
+    def __init__(self, dr: DataRec):
+        self._datarec = dr
 
-    dt._is_private = ds._is_private
-    dt.__implicit = ds.__implicit
+    def __getattr__(self, name):
+        try:
+            func = CHARACTERISTICS[name]
+        except KeyError:
+            raise AttributeError(name) from None
 
-    dt.dataset_name = ds.dataset_name
-    dt.version_name = ds.version_name
-    dt.user_col = ds.user_col
-    dt.item_col = ds.item_col
-    dt.rating_col = ds.rating_col
-    dt.timestamp_col = ds.timestamp_col
+        def bound(**kwargs):
+            return func(self._datarec, **kwargs)
+        
+        bound.__doc__ = func.__doc__
+        return bound
 
-    dt._sorted_users = ds._sorted_users
-    dt._sorted_items = ds._sorted_users
-    dt._public_to_private_users = ds._public_to_private_users
-    dt._public_to_private_items = ds._public_to_private_items
-    dt._private_to_public_users = ds._private_to_public_users
-    dt._private_to_public_items = ds._private_to_public_items
+
+def from_pickle(dataset_name:str = '', version_name:str = '', filepath: str = '') -> DataRec:
+    """
+    Load a DataRec object from a pickle file.
+
+    Args:
+        dataset_name (str): The name of the dataset.
+        version_name (str): The version identifier of the dataset.
+        filepath (str): The path to the pickle file.
+    Returns:
+        (DataRec): The loaded DataRec object.
+    """
+    import pickle
+
+    if filepath == '':
+        if dataset_name == '' and version_name == '':
+            raise ValueError("Either dataset_name and version_name or filepath must be provided.")
+        filepath = paths.pickle_version_filepath(dataset_name, version_name)
+
+    print(f'Loading DataRec from {filepath}')
+
+    with open(filepath, 'rb') as f:
+        dr = pickle.load(f)
+
+    print(f'DataRec correctly loaded from {filepath}')
+
+    return dr

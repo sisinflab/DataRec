@@ -1,0 +1,17 @@
+dataset: gowalla
+version: checkins
+computed_at: '2025-12-15T12:22:09.209996+00:00'
+characteristics:
+  n_users: 107092
+  n_items: 1280969
+  n_interactions: 6442892
+  space_size: 370.3802534531235
+  space_size_log: 2.5686478245408155
+  shape: 0.08360233541951445
+  shape_log: -1.0777815904360875
+  density: 4.696617612528927e-05
+  density_log: -4.32821479760447
+  gini_item: 0.6297417387377424
+  gini_user: 0.6915022878282465
+  ratings_per_user: 60.16221566503567
+  ratings_per_item: 5.029701733609478

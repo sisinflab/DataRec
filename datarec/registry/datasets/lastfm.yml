@@ -1,0 +1,23 @@
+dataset_name: LastFM
+versions:
+  - "2011"
+latest_version: "2011"
+
+source: https://grouplens.org/datasets/hetrec-2011/
+
+description: Last.fm dataset provided for the 2nd International Workshop on Information Heterogeneity and Fusion in Recommender Systems (HetRec 2011). 
+  The full archive contains multiple files (user-friends, tags, etc.), but this
+  loader specifically processes the `user_artists.dat` file, which contains
+  artists listened to by each user and a corresponding listening count (`weight`).
+citation: |
+   @inproceedings{Cantador:RecSys2011,
+      author = {Cantador, Iv\'{a}n and Brusilovsky, Peter and Kuflik, Tsvi},
+      title = {2nd Workshop on Information Heterogeneity and Fusion in Recommender Systems (HetRec 2011)},
+      booktitle = {Proceedings of the 5th ACM conference on Recommender systems},
+      series = {RecSys 2011},
+      year = {2011},
+      location = {Chicago, IL, USA},
+      publisher = {ACM},
+      address = {New York, NY, USA},
+      keywords = {information heterogeneity, information integration, recommender systems},
+   } 

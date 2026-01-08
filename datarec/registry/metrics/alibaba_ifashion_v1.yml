@@ -1,0 +1,17 @@
+dataset: alibaba_ifashion
+version: v1
+computed_at: '2025-12-15T19:32:41.849983+00:00'
+characteristics:
+  n_users: 3569112
+  n_items: 4463302
+  n_interactions: 620880083
+  space_size: 3991.2435064556007
+  space_size_log: 3.6011082249736726
+  shape: 0.799657294084066
+  shape_log: -0.09709609697870838
+  density: 3.8975462600227275e-05
+  density_log: -4.40920872146218
+  gini_item: 0.8774026297117475
+  gini_user: 0.4029096347976372
+  ratings_per_user: 173.9592601745196
+  ratings_per_item: 139.10779127202238
