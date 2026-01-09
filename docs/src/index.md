@@ -23,6 +23,12 @@ DataRec is a Python library that focuses on the **data management** phase of rec
 - [Processing](documentation/processing.md)
 - [Splitters](documentation/splitters.md)
 
+## Installation
+
+```bash
+pip install datarec-lib
+```
+
 ## Quickstart
 
 ```python

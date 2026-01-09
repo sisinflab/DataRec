@@ -1,9 +1,9 @@
-from datarec.datasets import MovieLens
+from datarec.datasets import Movielens
 
 from datarec.processing.binarizer import Binarize
 from datarec.processing.kcore import UserKCore, ItemKCore, UserItemNRoundsKCore, UserItemIterativeKCore
 
-datarec = MovieLens(version='1m')
+datarec = Movielens(version='1m').prepare_and_load()
 print(datarec)
 
 binarizer = Binarize(threshold=3)

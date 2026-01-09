@@ -3,11 +3,11 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "datarec"
-version = "1.3.1"
+name = "datarec-lib"
+version = "1.3.2"
 description = "Standardized & reproducible data management for recommender systems."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.15"
 authors = [
     { name = "Alberto Carlo Maria Mancino", email = "alberto.mancino@poliba.it" },
     { name = "Salvatore Bufi", email = "salvatore.bufi@poliba.it" },
@@ -17,7 +17,7 @@ authors = [
     { name = "Claudio Pomo", email = "claudio.pomo@poliba.it" },
     { name = "Tommaso Di Noia", email = "tommaso.dinoia@poliba.it" }
 ]
-license = { text = "MIT" }   # ok così
+license = { text = "MIT" }
 keywords = ["recommender-systems", "data", "ml", "etl"]
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -30,23 +30,30 @@ classifiers = [
 
 dependencies = [
     "numpy>=1.23,<3",
-    "pandas>=1.5,<3",
-    "scikit-learn>=1.2,<2",
+    "pandas>=2.3,<3",
+    "scikit-learn>=1.6,<2",
     "tqdm>=4.64,<5",
-    "gdown",
+    "gdown>=4.7,<5",
     "requests>=2.28,<3",
-    "py7zr",
-    "PyYAML",
-    "platformdirs>=4.4.0",
-    "appdirs>=1.4.4",
+    "py7zr>=0.22,<1",
+    "PyYAML>=6.0,<7",
+    "platformdirs>=4.4.0,<5",
+    "appdirs>=1.4.4,<2",
     "typing_extensions",
+    "networkx>=3.2,<4",
+    "python-igraph>=1.0,<2",
+    "PySocks>=1.7,<2",
 ]
+
 [project.optional-dependencies]
 torch = [
     "torch>=2.0.0"
 ]
 dev = [
-    "pytest>=7,<9"
+    "pytest>=8.4,<9",
+    "build>=1.3,<2",
+    "twine>=6.2,<7",
+    "pip-chill>=1.0,<2",
 ]
 docs = [
     "babel",
@@ -70,7 +77,6 @@ docs = [
     "mkdocs-section-index",
     "mkdocstrings",
     "mkdocstrings-python",
-    "myModule",
     "packaging",
     "paginate",
     "pathspec",
@@ -101,4 +107,3 @@ exclude = ["tests*", "docs*", "dist*"]
 
 [tool.setuptools.package-data]
 datarec = ["**/*.yml", "**/*.yaml", "**/*.json", "**/*.csv", "**/*.txt", "**/*.md", "py.typed"]
-

@@ -43,6 +43,11 @@ Official repository of the paper:
 
 ## Installation
 
+### From PyPI
+```bash
+pip install datarec-lib
+```
+
 ### From source (recommended for development)
 ```bash
 git clone https://github.com/sisinflab/DataRec.git

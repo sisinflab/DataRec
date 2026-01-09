@@ -75,7 +75,7 @@ def build_datasets_nav() -> str:
         row_span = len(versions)
         for idx, version in enumerate(versions):
             page_name = f"{dataset_file_stem}_{version}.md"
-            page_rel = f"assets/pages/datasets/{dataset_file_stem}_{version}/"
+            page_rel = f"../assets/pages/datasets/{dataset_file_stem}_{version}/"
             page_path = os.path.join(ASSETS_PAGES_DST, page_name)
             page_cell = f'<a href="{page_rel}">page</a>' if os.path.exists(page_path) else "—"
             if idx == 0:

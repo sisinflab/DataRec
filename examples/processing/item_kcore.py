@@ -1,8 +1,8 @@
 from datarec.processing.kcore import UserItemIterativeKCore
-from datarec.datasets import MovieLens
+from datarec.datasets import Movielens
 
 
-data = MovieLens(version="1m")
+data = Movielens(version="1m").prepare_and_load()
 
 flt = UserItemIterativeKCore(cores=2)
 

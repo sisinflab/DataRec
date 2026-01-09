@@ -1,8 +1,8 @@
 from datarec.processing.binarizer import Binarize
-from datarec.datasets import MovieLens
+from datarec.datasets import Movielens
 
 
-data = MovieLens(version="1m")
+data = Movielens(version="1m").prepare_and_load()
 
 flt = Binarize(threshold=4)
 

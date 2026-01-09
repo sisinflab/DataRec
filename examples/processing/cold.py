@@ -1,8 +1,8 @@
 from datarec.processing.cold import ColdFilter
-from datarec.datasets import MovieLens
+from datarec.datasets import Movielens
 
 
-data = MovieLens(version="1m")
+data = Movielens(version="1m").prepare_and_load()
 
 flt = ColdFilter(interactions=50)
 

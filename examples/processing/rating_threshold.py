@@ -1,8 +1,8 @@
 from datarec.processing.rating import FilterByRatingThreshold
-from datarec.datasets import MovieLens
+from datarec.datasets import Movielens
 
 
-data = MovieLens(version="1m")
+data = Movielens(version="1m").prepare_and_load()
 
 flt = FilterByRatingThreshold(rating_threshold=4)
 
