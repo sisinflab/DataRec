@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 ## [1.3.0] - 2026-01-09
 ### Added
+
+### Changed
+
+### Fixed
+- Documentation' assets
+
+## [1.3.0] - 2026-01-09
+### Added
 - New resource class
 - New source class
 - A novel dataset managment
