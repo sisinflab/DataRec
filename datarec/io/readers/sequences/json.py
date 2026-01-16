@@ -86,6 +86,90 @@ def read_sequences_json(
     return raw
 
 @annotate_rawdata_output
+def read_sequences_json_items(
+    filepath: str,
+    *,
+    user_col: str = "user",
+    item_col: str = "item",
+    rating_col: Optional[str] = None,
+    timestamp_col: Optional[str] = None,
+) -> RawData:
+    """
+    Reads a JSON file representing sequential interaction data in the form:
+
+    {
+      "user_id": [item_id, item_id, ...],
+      ...
+    }
+
+    Each list contains item identifiers only (no event objects). The data is
+    converted into a transactional RawData format with one row per interaction.
+
+    Args:
+        filepath: Path to the JSON file.
+        user_col: Name assigned to the user column in the output.
+        item_col: Name assigned to the item column in the output.
+        rating_col: Not supported for item-only JSON.
+        timestamp_col: Not supported for item-only JSON.
+
+    Returns:
+        RawData: A RawData object containing all interactions exploded row-by-row.
+    """
+    if rating_col is not None or timestamp_col is not None:
+        raise ValueError(
+            "Item-list JSON cannot include rating/timestamp fields. "
+            "Use read_sequences_json for event-object JSON."
+        )
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"File not found: {filepath}")
+
+    # Load the entire JSON structure
+    with open(filepath, "r", encoding="utf-8") as f:
+        payload: Any = json.load(f)
+
+    if not isinstance(payload, dict):
+        raise ValueError(
+            f"Expected a JSON object at top level, got {type(payload)} instead."
+        )
+
+    rows: List[Dict[str, Any]] = []
+
+    # Iterate over each user and their list of item ids
+    for user_id, items in payload.items():
+        if not isinstance(items, list):
+            raise ValueError(
+                f"Expected a list of item ids for user '{user_id}', got {type(items)}."
+            )
+
+        for item_id in items:
+            if isinstance(item_id, (dict, list)):
+                raise ValueError(
+                    "Expected each item in the list to be a scalar item id (int or str), "
+                    f"got {type(item_id)} for user '{user_id}'."
+                )
+            if isinstance(item_id, bool) or not isinstance(item_id, (int, str)):
+                raise ValueError(
+                    "Expected each item in the list to be a scalar item id (int or str), "
+                    f"got {type(item_id)} for user '{user_id}'."
+                )
+            rows.append({user_col: user_id, item_col: item_id})
+
+    # Build DataFrame
+    data = pd.DataFrame(rows).reset_index(drop=True)
+
+    # Final RawData object
+    raw = RawData(
+        data,
+        user=user_col,
+        item=item_col,
+        rating=rating_col,
+        timestamp=timestamp_col,
+    )
+
+    return raw
+
+@annotate_rawdata_output
 def read_sequences_json_array(
     filepath: str,
     *,

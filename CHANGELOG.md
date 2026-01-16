@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [1.3.3] - 2026-01-16
+### Added
+- New data format 'json sequence items' with corresponding readers and writers
+- New tests for the new data format
+- New examples for the new data format
+- New data formats page in documentation
+
+### Changed
+- documentation
+
+### Fixed
+- Fixed requirements
+
+---
+
 ## [1.3.2] - 2026-01-09
 ### Added
 - Pypi installation
@@ -15,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed requirements
 
+---
+
+
 ## [1.3.1] - 2026-01-09
 ### Added
 
@@ -22,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Documentation' assets
+
+---
 
 ## [1.3.0] - 2026-01-09
 ### Added
@@ -45,6 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - pyproject.toml for pypi
 - Pipeline export
 
+---
+
 ## [1.2.1] - 2025-10-21
 ### Added
 - Nothing changed
@@ -56,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Doc: fixed 'pipe' page
 - pyproject.toml for pypi
 
+---
 
 ## [1.2.0] - 2025-10-25
 ### Added

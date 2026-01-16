@@ -1,2 +1,2 @@
-from .json import read_sequences_json, read_sequences_json_array
+from .json import read_sequences_json, read_sequences_json_array, read_sequences_json_items
 from .tabular import read_sequence_tabular_inline, read_sequence_tabular_wide, read_sequence_tabular_implicit

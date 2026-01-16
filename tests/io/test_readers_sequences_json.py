@@ -1,6 +1,13 @@
 from pathlib import Path
+import json
 
-from datarec.io.readers.sequences.json import read_sequences_json, read_sequences_json_array
+import pytest
+
+from datarec.io.readers.sequences.json import (
+    read_sequences_json,
+    read_sequences_json_array,
+    read_sequences_json_items,
+)
 
 
 def test_read_sequences_json(tmp_path):
@@ -48,3 +55,55 @@ def test_read_sequences_json_array(tmp_path):
     assert len(rd.data) == 3
     assert set(rd.data[rd.user]) == {"u1", "u2"}
     assert set(rd.data[rd.item]) == {1, 2, 3}
+
+
+def test_read_sequences_json_items(tmp_path):
+    p = tmp_path / "seq_items.json"
+    payload = {"0": [4755, 9066, 9765], "1": [2975]}
+    p.write_text(json.dumps(payload), encoding="utf-8")
+
+    rd = read_sequences_json_items(
+        str(p),
+        user_col="user",
+        item_col="item",
+    )
+
+    assert len(rd.data) == 4
+    assert set(rd.data[rd.user]) == {"0", "1"}
+    assert list(rd.data[rd.data[rd.user] == "0"][rd.item]) == [4755, 9066, 9765]
+    assert list(rd.data[rd.data[rd.user] == "1"][rd.item]) == [2975]
+
+
+def test_read_sequences_json_items_requires_object(tmp_path):
+    p = tmp_path / "seq_items.json"
+    p.write_text(json.dumps([1, 2, 3]), encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        read_sequences_json_items(str(p))
+
+
+def test_read_sequences_json_items_requires_list_per_user(tmp_path):
+    p = tmp_path / "seq_items.json"
+    p.write_text(json.dumps({"0": {"item": 1}}), encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        read_sequences_json_items(str(p))
+
+
+def test_read_sequences_json_items_requires_scalar_items(tmp_path):
+    p = tmp_path / "seq_items.json"
+    p.write_text(json.dumps({"0": [{"item": 1}]}), encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        read_sequences_json_items(str(p))
+
+
+def test_read_sequences_json_items_rejects_rating_or_timestamp(tmp_path):
+    p = tmp_path / "seq_items.json"
+    p.write_text(json.dumps({"0": [1, 2]}), encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        read_sequences_json_items(str(p), rating_col="rating")
+
+    with pytest.raises(ValueError):
+        read_sequences_json_items(str(p), timestamp_col="timestamp")

@@ -79,6 +79,7 @@ nav:
   - Documentation: 
       - IO: documentation/io.md
       - Data: documentation/data.md
+      - Data Formats: ./assets/pages/data_formats.md
       - Datasets: documentation/datasets.md
       - Processing: documentation/processing.md
       - Splitters: documentation/splitters.md

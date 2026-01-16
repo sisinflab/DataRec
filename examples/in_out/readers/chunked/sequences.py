@@ -1,6 +1,6 @@
 import os
 from datarec.io.readers.sequences.tabular import read_sequence_tabular_inline, read_sequence_tabular_wide, read_sequence_tabular_implicit
-from datarec.io.readers.sequences.json import read_sequences_json, read_sequences_json_array
+from datarec.io.readers.sequences.json import read_sequences_json, read_sequences_json_array, read_sequences_json_items
 from datarec.datasets.examples import download_example_by_url
 
 output_folder = 'data'
@@ -55,6 +55,9 @@ print(read_sequence_tabular_implicit(os.path.join(output_folder, filename), head
 
 download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/sequences/json-user-indexed/interactions/dataset.json')
 print(read_sequences_json(os.path.join(output_folder, filename), user_col='user', item_col='item'))
+
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/sequences/json-items/interactions/dataset.json')
+print(read_sequences_json_items(os.path.join(output_folder, filename), user_col='user', item_col='item'))
 
 download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/sequences/json-user-indexed/ratings/dataset.json')
 print(read_sequences_json(os.path.join(output_folder, filename), user_col='user', item_col='item', rating_col='rating'))

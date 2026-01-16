@@ -145,6 +145,79 @@ def write_sequences_json(
     if verbose:
         print(f"Sequences JSON mapping written to '{filepath}'")
 
+
+def write_sequences_json_items(
+    data: Union["RawData", "DataRec"],
+    filepath: str,
+    *,
+    item_col: str = "item",
+    compact_items: bool = True,
+    ensure_ascii: bool = False,
+    indent: Optional[int] = 2,
+    verbose: bool = True,
+) -> None:
+    """
+    Writes sequential interaction data to a JSON mapping in the form:
+
+        {
+          "<user_id>": [item_id, item_id, ...],
+          ...
+        }
+
+    Notes:
+    - The input is expected to be transactional RawData (one row per interaction).
+    - User identifiers become JSON object keys (strings). Therefore, the output does
+      NOT contain a user field name (no `user_col` parameter).
+
+    Args:
+        data: RawData or DataRec instance.
+        filepath: Output path.
+        item_col: Output key name for the item field in RawData.
+        compact_items: Whether to keep item lists on a single line when indenting.
+        ensure_ascii: Whether to escape non-ascii characters.
+        indent: Pretty-print indentation level.
+        verbose: Whether to print a confirmation message.
+
+    Returns:
+        None
+    """
+    raw = as_rawdata(data)
+
+    if raw.user is None:
+        raise ValueError("RawData.user is not defined.")
+    if raw.item is None:
+        raise ValueError("RawData.item is not defined.")
+
+    df = raw.data[[raw.user, raw.item]].dropna(subset=[raw.user, raw.item])
+
+    payload: Dict[str, List[Any]] = {}
+
+    # Preserve order of appearance
+    for uid, g in df.groupby(raw.user, sort=False):
+        items = [_json_safe(v) for v in g[raw.item].tolist()]
+        payload[str(_json_safe(uid))] = items
+
+    out_dir = os.path.dirname(os.path.abspath(filepath))
+    if out_dir and not os.path.exists(out_dir):
+        os.makedirs(out_dir, exist_ok=True)
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        if compact_items and indent is not None:
+            indent_str = " " * indent
+            f.write("{\n")
+            items = list(payload.items())
+            for idx, (uid, item_list) in enumerate(items):
+                key_json = json.dumps(uid, ensure_ascii=ensure_ascii)
+                list_json = json.dumps(item_list, ensure_ascii=ensure_ascii)
+                sep = "," if idx < len(items) - 1 else ""
+                f.write(f"{indent_str}{key_json}: {list_json}{sep}\n")
+            f.write("}\n")
+        else:
+            json.dump(payload, f, ensure_ascii=ensure_ascii, indent=indent)
+
+    if verbose:
+        print(f"Sequences JSON item list written to '{filepath}'")
+
 def write_sequences_json_array(
     data: Union["RawData", "DataRec"],
     filepath: str,
