@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.3.3] - 2026-01-16
+## [1.5.0] - 2026-01-18
+### Added
+- New data format 'transactions blocks' with corresponding readers and writers
+- New tests for the new data format
+- New examples for the new data format
+- New data formats page in documentation
+
+### Changed
+- documentation
+
+### Fixed
+- Nothing
+
+---
+
+## [1.4.0] - 2026-01-16
 ### Added
 - New data format 'json sequence items' with corresponding readers and writers
 - New tests for the new data format

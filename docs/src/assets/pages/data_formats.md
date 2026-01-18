@@ -19,6 +19,7 @@ RawData back to that format (Write).
     - [Tabular](#tabular)
     - [JSON](#json)
     - [JSONL](#jsonl)
+    - [Blocks (text)](#blocks-text)
 - [Extending this catalog](#extending-this-catalog)
 
 
@@ -40,8 +41,8 @@ Sequence datasets store per-user ordered lists.
 - One row per user
 - `item` contains a delimiter-separated sequence (semicolon)
 - Optional `timestamp` column for aligned sequences
-- Read: `read_sequence_tabular_inline`
-- Write: `write_sequence_tabular_inline`
+- Read: [read_sequence_tabular_inline](../../documentation/io.md#datarec.io.readers.sequences.tabular.read_sequence_tabular_inline)
+- Write: [write_sequence_tabular_inline](../../documentation/io.md#datarec.io.writers.sequences.tabular.write_sequence_tabular_inline)
 
 Example (`interactions`):
 
@@ -63,8 +64,8 @@ user	item	timestamp
 
 - One row per user
 - Each item is a separate column
-- Read: `read_sequence_tabular_wide`
-- Write: `write_sequence_tabular_wide`
+- Read: [read_sequence_tabular_wide](../../documentation/io.md#datarec.io.readers.sequences.tabular.read_sequence_tabular_wide)
+- Write: [write_sequence_tabular_wide](../../documentation/io.md#datarec.io.writers.sequences.tabular.write_sequence_tabular_wide)
 
 Example:
 
@@ -79,8 +80,8 @@ user	item
 - First value is `user`
 - Remaining columns are items
 - Optional headerless variant for tabular data
-- Read: `read_sequence_tabular_implicit`
-- Write: `write_sequence_tabular_implicit`
+- Read: [read_sequence_tabular_implicit](../../documentation/io.md#datarec.io.readers.sequences.tabular.read_sequence_tabular_implicit)
+- Write: [write_sequence_tabular_implicit](../../documentation/io.md#datarec.io.writers.sequences.tabular.write_sequence_tabular_implicit)
 
 Example:
 
@@ -94,8 +95,8 @@ user	item
 
 - Top-level object keyed by `user`
 - Value is an ordered list of events
-- Read: `read_sequences_json`
-- Write: `write_sequences_json`
+- Read: [read_sequences_json](../../documentation/io.md#datarec.io.readers.sequences.json.read_sequences_json)
+- Write: [write_sequences_json](../../documentation/io.md#datarec.io.writers.sequences.json.write_sequences_json)
 
 Example (`interactions`):
 
@@ -134,8 +135,8 @@ Example (`timestamp`):
 
 - Top-level object keyed by `user`
 - Value is an ordered list of item ids (scalars only)
-- Read: `read_sequences_json_items`
-- Write: `write_sequences_json_items`
+- Read: [read_sequences_json_items](../../documentation/io.md#datarec.io.readers.sequences.json.read_sequences_json_items)
+- Write: [write_sequences_json_items](../../documentation/io.md#datarec.io.writers.sequences.json.write_sequences_json_items)
 
 Example (`interactions`):
 
@@ -150,8 +151,8 @@ Example (`interactions`):
 
 - Top-level array
 - Each entry contains `user` and `sequence`
-- Read: `read_sequences_json_array`
-- Write: `write_sequences_json_array`
+- Read: [read_sequences_json_array](../../documentation/io.md#datarec.io.readers.sequences.json.read_sequences_json_array)
+- Write: [write_sequences_json_array](../../documentation/io.md#datarec.io.writers.sequences.json.write_sequences_json_array)
 
 Example (`interactions`):
 
@@ -189,8 +190,8 @@ Transaction datasets store one event per row/object.
 
 - One row per event
 - Optional headerless variant for tabular data
-- Read: `read_transactions_tabular`
-- Write: `write_transactions_tabular`
+- Read: [read_transactions_tabular](../../documentation/io.md#datarec.io.readers.transactions.tabular.read_transactions_tabular)
+- Write: [write_transactions_tabular](../../documentation/io.md#datarec.io.writers.transactions.tabular.write_transactions_tabular)
 
 Example (`ratings`):
 
@@ -212,8 +213,8 @@ user	item	ratings	timestamp
 
 - Top-level array
 - One object per event
-- Read: `read_transactions_json`
-- Write: `write_transactions_json`
+- Read: [read_transactions_json](../../documentation/io.md#datarec.io.readers.transactions.json.read_transactions_json)
+- Write: [write_transactions_json](../../documentation/io.md#datarec.io.writers.transactions.json.write_transactions_json)
 
 Example (`ratings`):
 
@@ -227,8 +228,8 @@ Example (`ratings`):
 ### JSONL
 
 - One JSON object per line
-- Read: `read_transactions_jsonl`
-- Write: `write_transactions_jsonl`
+- Read: [read_transactions_jsonl](../../documentation/io.md#datarec.io.readers.transactions.jsonl.read_transactions_jsonl)
+- Write: [write_transactions_jsonl](../../documentation/io.md#datarec.io.writers.transactions.jsonl.write_transactions_jsonl)
 
 Example (`interactions`):
 
@@ -242,6 +243,68 @@ Example (`timestamp`):
 ```json
 {"user": 0, "item": 1, "rating": 1, "timestamp": "001"}
 {"user": 0, "item": 2, "rating": 1, "timestamp": "022"}
+```
+
+### Blocks (text)
+
+- Block format with an explicit block id header
+- Modes:
+  - Item-wise blocks: `<ITEM_ID>:` then events
+  - User-wise blocks: `<USER_ID>:` then events
+- Event layouts:
+  - `id`
+  - `id,rating`
+  - `id,rating,timestamp`
+- Date is kept as string; reader is streaming
+- Read: [read_transactions_blocks](../../documentation/io.md#datarec.io.readers.transactions.blocks.read_transactions_blocks)
+- Write: [write_transactions_blocks](../../documentation/io.md#datarec.io.writers.transactions.blocks.write_transactions_blocks)
+
+Example (item-wise, id):
+
+```text
+1:
+10
+20
+```
+
+Example (item-wise, id,rating):
+
+```text
+1:
+10,4
+20,3
+```
+
+Example (item-wise, id,rating,timestamp):
+
+```text
+1:
+10,4,2005-01-01
+20,3,2005-01-02
+```
+
+Example (user-wise, id):
+
+```text
+10:
+1
+2
+```
+
+Example (user-wise, id,rating):
+
+```text
+10:
+1,4
+2,3
+```
+
+Example (user-wise, id,rating,timestamp):
+
+```text
+10:
+1,4,2005-01-01
+2,3,2005-01-02
 ```
 
 ## Extending this catalog

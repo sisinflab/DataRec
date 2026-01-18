@@ -2,6 +2,7 @@ import os
 from datarec.io.readers.transactions.tabular import read_transactions_tabular
 from datarec.io.readers.transactions.json import read_transactions_json
 from datarec.io.readers.transactions.jsonl import read_transactions_jsonl
+from datarec.io.readers.transactions.blocks import read_transactions_blocks
 from datarec.datasets.examples import download_example_by_url
 
 output_folder = 'data'
@@ -65,3 +66,30 @@ print(read_transactions_jsonl(os.path.join(output_folder, filename), user_col='u
  # ratings with timestamp
 download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/jsonl/timestamp/dataset.json')
 print(read_transactions_jsonl(os.path.join(output_folder, filename), user_col='user', item_col='item', rating_col='rating', timestamp_col='timestamp'))
+
+
+# # -- BLOCKS DATASETS --
+
+ # item-wise blocks: id
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/blocks_items/interactions/dataset.tsv')
+print(read_transactions_blocks(os.path.join(output_folder, filename), block_by='item', event_layout='id', user_col='user', item_col='item', sep='\t'))
+
+ # item-wise blocks: id,rating
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/blocks_items/ratings/dataset.tsv')
+print(read_transactions_blocks(os.path.join(output_folder, filename), block_by='item', event_layout='id,rating', user_col='user', item_col='item', rating_col='rating', sep='\t'))
+
+ # item-wise blocks: id,rating,timestamp
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/blocks_items/timestamp/dataset.tsv')
+print(read_transactions_blocks(os.path.join(output_folder, filename), block_by='item', event_layout='id,rating,timestamp', user_col='user', item_col='item', rating_col='rating', timestamp_col='timestamp', sep='\t'))
+
+ # user-wise blocks: id
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/blocks_users/interactions/dataset.tsv')
+print(read_transactions_blocks(os.path.join(output_folder, filename), block_by='user', event_layout='id', user_col='user', item_col='item', sep='\t'))
+
+ # user-wise blocks: id,rating
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/blocks_users/ratings/dataset.tsv')
+print(read_transactions_blocks(os.path.join(output_folder, filename), block_by='user', event_layout='id,rating', user_col='user', item_col='item', rating_col='rating', sep='\t'))
+
+ # user-wise blocks: id,rating,timestamp
+download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/transactions/blocks_users/timestamp/dataset.tsv')
+print(read_transactions_blocks(os.path.join(output_folder, filename), block_by='user', event_layout='id,rating,timestamp', user_col='user', item_col='item', rating_col='rating', timestamp_col='timestamp', sep='\t'))
