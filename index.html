@@ -437,6 +437,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quickstart" class="md-nav__link">
     <span class="md-ellipsis">
       Quickstart
@@ -556,6 +565,8 @@
       
         
       
+        
+      
     
     
     
@@ -626,6 +637,29 @@
   
   <span class="md-ellipsis">
     Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="assets/pages/data_formats/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Formats
     
   </span>
   
@@ -825,6 +859,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quickstart" class="md-nav__link">
     <span class="md-ellipsis">
       Quickstart
@@ -907,17 +950,20 @@
 - <a href="documentation/pipeline/">Pipeline</a>
 - <a href="documentation/processing/">Processing</a>
 - <a href="documentation/splitters/">Splitters</a></p>
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>datarec-lib
+</code></pre></div>
 <h2 id="quickstart">Quickstart</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">AmazonOffice</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.processing</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterOutDuplicatedInteractions</span><span class="p">,</span> <span class="n">UserItemIterativeKCore</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.splitters</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomHoldOut</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">data</span> <span class="o">=</span> <span class="n">AmazonOffice</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;2014&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prepare_and_load</span><span class="p">()</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">data</span> <span class="o">=</span> <span class="n">FilterOutDuplicatedInteractions</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">data</span> <span class="o">=</span> <span class="n">UserItemIterativeKCore</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">splits</span> <span class="o">=</span> <span class="n">RandomHoldOut</span><span class="p">(</span><span class="n">test_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">val_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">AmazonOffice</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.processing</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterOutDuplicatedInteractions</span><span class="p">,</span> <span class="n">UserItemIterativeKCore</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datarec.splitters</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomHoldOut</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">data</span> <span class="o">=</span> <span class="n">AmazonOffice</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;2014&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prepare_and_load</span><span class="p">()</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">data</span> <span class="o">=</span> <span class="n">FilterOutDuplicatedInteractions</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">data</span> <span class="o">=</span> <span class="n">UserItemIterativeKCore</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">splits</span> <span class="o">=</span> <span class="n">RandomHoldOut</span><span class="p">(</span><span class="n">test_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">val_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h2 id="filtering-strategies">Filtering Strategies</h2>
 <p>DataRec provides <strong>preprocessing filters</strong> to clean and shape interaction data before modeling. See the
