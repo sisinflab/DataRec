@@ -199,23 +199,44 @@ class UserItemIterativeKCore(Processor):
 
     This class applies the IterativeKCore filter to both the user and item columns of the dataset.
     """
-    def __init__(self, cores: Union[int, list]):
+    def __init__(self, user_core: int = None, item_core: int = None,
+                 cores: Union[int, list, None] = None):
         """
         Initializes the UserItemIterativeKCore object.
         
         Args:
-            cores (list or int): A list of core values for the user and item columns.
+            user_core (int): The minimum number of interactions required per user.
+            item_core (int): The minimum number of interactions required per item.
+            cores (list or int, optional): Legacy parameter. A list of core values for user and item
+                columns, or a single int for both.
             
         Raises:
-            TypeError: If "cores" is not a list or an integer.
+            TypeError: If core values are missing or invalid.
         """
 
-        if not isinstance(cores, (list, int)):
-            raise TypeError('Cores must be a list or an integer.')
+        if user_core is None and item_core is None and cores is None:
+            raise TypeError('User and item cores must be provided.')
+
+        if user_core is None and item_core is None and cores is not None:
+            if isinstance(cores, list):
+                if len(cores) != 2:
+                    raise TypeError('Cores list must contain exactly two elements.')
+                user_core, item_core = cores
+            elif isinstance(cores, int):
+                user_core = cores
+                item_core = cores
+            else:
+                raise TypeError('Cores must be a list or an integer.')
 
         self.params = {k: v for k, v in locals().items() if k != 'self'}
+        if user_core is not None or item_core is not None:
+            self.params.pop('cores', None)
 
-        self._cores = cores
+        if not isinstance(user_core, int) or not isinstance(item_core, int):
+            raise TypeError('User and item cores must be integers.')
+
+        self._user_core = user_core
+        self._item_core = item_core
 
     def run(self, datarec: DataRec) -> DataRec:
         """
@@ -230,7 +251,7 @@ class UserItemIterativeKCore(Processor):
         """
 
         core_obj = IterativeKCore(columns=[datarec.user_col, datarec.item_col],
-                                  cores=self._cores)
+                                  cores=[self._user_core, self._item_core])
         result = core_obj.run(datarec.data)
 
         return self.output(datarec, result, {'operation': self.__class__.__name__, 'params': self.params})
@@ -305,28 +326,49 @@ class UserItemNRoundsKCore(Processor):
     This class applies the NRoundsKCore filter to both the user and item columns of the dataset.
     """
     
-    def __init__(self, cores: Union[int, list], rounds: int):
+    def __init__(self, rounds: int, user_core: int = None, item_core: int = None,
+                 cores: Union[int, list, None] = None):
         """
         Initializes the UserItemNRoundsKCore object.
         
         Args:
-            cores (int, list): A list of core values for the user and item columns.
             rounds (int): The number of rounds to apply the filtering process.
+            user_core (int): The minimum number of interactions required per user.
+            item_core (int): The minimum number of interactions required per item.
+            cores (int, list, optional): Legacy parameter. A list of core values for user and item
+                columns, or a single int for both.
         
         Raises:
-            TypeError: If 'cores' is not a list or an integer.
+            TypeError: If core values are missing or invalid.
             TypeError: If 'rounds' is not an integer.
         """
 
-        if not isinstance(cores, (list, int)):
-            raise TypeError('Cores must be a list or an integer.')
+        if user_core is None and item_core is None and cores is None:
+            raise TypeError('User and item cores must be provided.')
+
+        if user_core is None and item_core is None and cores is not None:
+            if isinstance(cores, list):
+                if len(cores) != 2:
+                    raise TypeError('Cores list must contain exactly two elements.')
+                user_core, item_core = cores
+            elif isinstance(cores, int):
+                user_core = cores
+                item_core = cores
+            else:
+                raise TypeError('Cores must be a list or an integer.')
 
         if not isinstance(rounds, int):
             raise TypeError('Rounds must be an integer.')
 
         self.params = {k: v for k, v in locals().items() if k != 'self'}
+        if user_core is not None or item_core is not None:
+            self.params.pop('cores', None)
 
-        self._cores = cores
+        if not isinstance(user_core, int) or not isinstance(item_core, int):
+            raise TypeError('User and item cores must be integers.')
+
+        self._user_core = user_core
+        self._item_core = item_core
         self._rounds = rounds
 
     def run(self, datarec: DataRec) -> DataRec:
@@ -342,7 +384,7 @@ class UserItemNRoundsKCore(Processor):
         """
 
         core_obj = NRoundsKCore(columns=[datarec.user_col, datarec.item_col],
-                                cores=self._cores, rounds=self._rounds)
+                                cores=[self._user_core, self._item_core], rounds=self._rounds)
         result = core_obj.run(datarec.data)
 
         return self.output(datarec, result, {'operation': self.__class__.__name__, 'params': self.params})

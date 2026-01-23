@@ -1,6 +1,7 @@
 import os
 import yaml
 import importlib
+import urllib.request
 from dataclasses import dataclass
 from typing import Optional, Union, Dict, Any
 from datarec.io.paths import registry_version_filepath, registry_dataset_filepath, pickle_version_filepath
@@ -330,13 +331,28 @@ def load_dataset_config(dataset_name:str, dataset_version:str='')->dict:
         with open(config_path, "r") as f:
             config = yaml.safe_load(f)
         return config
-    else:
-        config_path = registry_version_filepath(dataset_name, dataset_version)
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-        assert dataset_version == config['version'], \
-            "Dataset version must be the same as the one in the config file."
-        return config
+
+
+def load_dataset_config_from_url(url: str) -> dict:
+    """
+    Load a dataset configuration YAML from a remote URL.
+
+    Args:
+        url (str): URL pointing to a registry dataset or version YAML.
+
+    Returns:
+        (dict): Parsed dataset configuration.
+    """
+    try:
+        with urllib.request.urlopen(url) as response:
+            content = response.read().decode("utf-8")
+    except Exception as exc:
+        raise RuntimeError(f"Failed to load dataset config from URL: {url}") from exc
+
+    config = yaml.safe_load(content)
+    if not isinstance(config, dict):
+        raise ValueError("Remote registry config must be a mapping.")
+    return config
 
 def set_resource(resource_name: str, resource_conf: dict) -> Resource:
     """

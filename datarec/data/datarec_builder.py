@@ -2,13 +2,18 @@ import os
 from typing import List, Union, Dict, Any, Iterable, Collection
 from abc import ABC, abstractmethod
 from datarec.data.dataset import DataRec
-from datarec.data.resource import load_dataset_config, set_resources, find_resource_by_type, find_ratings_resource, load_versions
+from datarec.data.resource import (load_dataset_config,
+                                   load_dataset_config_from_url,
+                                   set_resources,
+                                   find_resource_by_type,
+                                   find_ratings_resource,
+                                   load_versions)
 from datarec.io.paths import dataset_raw_directory, RAW_DATA_FOLDER, pickle_version_filepath
 from datarec.data.source import set_sources
 
 
 
-class Dataset:
+class RegisteredDataset:
 
     def __init__(self, dataset_name:str, version:str, folder=None):
 
@@ -30,6 +35,41 @@ class Dataset:
         
         # initialize prepared resources dictionary to keep track of prepared resources
         self.prepared_resources = {}
+
+    @classmethod
+    def from_url(cls, url: str, folder=None):
+        """
+        Build a RegisteredDataset from a remote registry YAML.
+
+        Args:
+            url (str): URL to a registry version YAML.
+            folder (str | None): Optional output folder override.
+
+        Returns:
+            RegisteredDataset: An instance backed by the remote registry config.
+        """
+        config = load_dataset_config_from_url(url)
+        dataset_name = config.get("dataset_name")
+        version = config.get("version")
+        if dataset_name is None or version is None:
+            raise ValueError("Remote registry config must include 'dataset_name' and 'version'.")
+
+        instance = cls.__new__(cls)
+        instance.dataset_name = dataset_name
+        instance.version = version
+        instance.output_folder = instance.find_output_folder(folder=folder)
+        instance.config = config
+
+        instance.sources = set_sources(instance.config, folder=instance.output_folder)
+        instance.resources = set_resources(instance.config)
+        for resource in instance.resources.values():
+            resource.link_source(instance.sources)
+            resource.assign_dataset_info(instance.dataset_name, instance.version)
+            resource.output_folder = instance.output_folder
+
+        instance.prepared_resources = {}
+        instance.registry_url = url
+        return instance
 
 
     def find_resource_by_constraints(

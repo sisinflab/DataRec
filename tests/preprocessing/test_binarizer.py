@@ -17,7 +17,7 @@ def sample_data():
 
 
 def test_binarize_implicit(sample_data):
-    binarizer = Binarize(threshold=3.0, implicit=True)
+    binarizer = Binarize(threshold=3.0, keep='positive', drop_rating_col=True)
     result = binarizer.run(sample_data)
 
     assert len(result.data) == 2
@@ -25,11 +25,27 @@ def test_binarize_implicit(sample_data):
 
 
 def test_binarize_explicit(sample_data):
-    binarizer = Binarize(threshold=3.0, implicit=False, over_threshold=1, under_threshold=0)
+    binarizer = Binarize(threshold=3.0, keep='all', drop_rating_col=False, over_threshold=1, under_threshold=0)
     result = binarizer.run(sample_data)
 
     assert (result.data['rating'] == 1).sum() == 2
     assert (result.data['rating'] == 0).sum() == 2
+
+
+def test_binarize_keep_positive_without_drop(sample_data):
+    binarizer = Binarize(threshold=3.0, keep='positive', drop_rating_col=False)
+    result = binarizer.run(sample_data)
+
+    assert len(result.data) == 2
+    assert (result.data['rating'] == 1).sum() == 2
+
+
+def test_binarize_implicit_legacy(sample_data):
+    binarizer = Binarize(threshold=3.0, implicit=True)
+    result = binarizer.run(sample_data)
+
+    assert len(result.data) == 2
+    assert 'rating' not in result.data.columns
 
 
 def test_binarize_missing_rating_column():

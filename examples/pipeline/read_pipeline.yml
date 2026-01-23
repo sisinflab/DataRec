@@ -11,7 +11,8 @@ pipeline:
 - name: process
   operation: UserItemIterativeKCore
   params:
-    cores: 2
+    user_core: 2
+    item_core: 2
 - name: split
   operation: RandomHoldOut
   params:

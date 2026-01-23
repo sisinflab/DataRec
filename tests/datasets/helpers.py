@@ -1,6 +1,6 @@
 import pytest
 
-from datarec.data.datarec_builder import Dataset
+from datarec.data.datarec_builder import RegisteredDataset
 from datarec.data.resource import load_dataset_config
 
 

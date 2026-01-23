@@ -1,8 +1,8 @@
 from datarec.splitters.uniform import RandomHoldOut
-from datarec.datasets import MovieLens
+from datarec.datasets import Movielens
 
 
-data = MovieLens(version="1m")
+data = Movielens(version="1m").prepare_and_load()
 
 spl = RandomHoldOut(test_ratio=0.2, val_ratio=0.1)
 

@@ -699,7 +699,7 @@ class DataRec:
             )
 
         if autoprepare:
-            self.map_users_and_items()
+            self.build_encoding(on='all', offset=0)
             self.encode()
         else:
             warnings.warn(

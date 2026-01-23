@@ -1,4 +1,4 @@
-from datarec.data.datarec_builder import Dataset
+from datarec.data.datarec_builder import RegisteredDataset
 from datarec.data.resource import load_dataset_config, load_versions
 
 class DatasetEntryPoint:
@@ -6,7 +6,7 @@ class DatasetEntryPoint:
 
     dataset_name: str = ""
 
-    def __new__(cls, version: str = "latest", **kwargs) -> Dataset:
+    def __new__(cls, version: str = "latest", **kwargs) -> RegisteredDataset:
         if not cls.dataset_name:
             raise ValueError(f"{cls.__name__}: dataset_name is not defined")
 
@@ -24,4 +24,4 @@ class DatasetEntryPoint:
         if version == "latest":
             version = latest_version
 
-        return Dataset(dataset_name=cls.dataset_name, version=version, **kwargs)
+        return RegisteredDataset(dataset_name=cls.dataset_name, version=version, **kwargs)

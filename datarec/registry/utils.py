@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 from datetime import datetime, timezone
 from pathlib import Path
 from datarec.data.resource import load_dataset_config
-from datarec.data.datarec_builder import Dataset
+from datarec.data.datarec_builder import RegisteredDataset
 from datarec.data.characteristics import CHARACTERISTICS
 from datarec.io.paths import (
     REGISTRY_DATASETS_FOLDER,

@@ -21,17 +21,17 @@ results = corer.run(datarec)
 print(results)
 
 print('iterative 30 30')
-corer = UserItemIterativeKCore(cores=30)
+corer = UserItemIterativeKCore(user_core=30, item_core=30)
 results = corer.run(datarec)
 print(results)
 
 print('round 30 30')
-corer = UserItemNRoundsKCore(cores=30, rounds=2)
+corer = UserItemNRoundsKCore(rounds=2, user_core=30, item_core=30)
 results = corer.run(datarec)
 print(results)
 
 print('iterative 30 0')
-corer = UserItemIterativeKCore(cores=[30, 0])
+corer = UserItemIterativeKCore(user_core=30, item_core=0)
 results = corer.run(datarec)
 print(results)
 

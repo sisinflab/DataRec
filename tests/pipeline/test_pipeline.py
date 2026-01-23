@@ -25,12 +25,12 @@ from datarec.splitters import (RandomHoldOut,
 
 PROCESSORS = [
     # (ProcessorClass, init_params, expected_operation_name)
-    (Binarize, {'threshold': 3.0, 'implicit': True, 'over_threshold': 1, 'under_threshold': 0}),
+    (Binarize, {'threshold': 3.0, 'keep': 'positive', 'drop_rating_col': True, 'over_threshold': 1, 'under_threshold': 0}),
     (ColdFilter, {'interactions': 2, 'mode': 'user'}),
     (UserKCore, {'core': 2}),
     (ItemKCore, {'core': 2}),
-    (UserItemIterativeKCore, {'cores': 2}),
-    (UserItemNRoundsKCore, {'cores': 2, 'rounds': 2}),
+    (UserItemIterativeKCore, {'user_core': 2, 'item_core': 2}),
+    (UserItemNRoundsKCore, {'user_core': 2, 'item_core': 2, 'rounds': 2}),
     (FilterByRatingThreshold, {'rating_threshold': 2}),
     #(FilterByUserMeanRating, {}), #TODO: manage classes whithout parameters
     (FilterByTime, {'time_threshold': 0, 'drop': 'after'})

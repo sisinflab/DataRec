@@ -13,12 +13,12 @@ if __name__ == '__main__':
     print(f"Original dataset: {datarec.n_users} users, {datarec.n_items} items, {len(datarec)} interactions.")
     print(f"Original pipeline length: {len(datarec.pipeline.steps)}\n")
 
-    binarizer = Binarize(threshold=4, implicit=False)
+    binarizer = Binarize(threshold=4, keep='all', drop_rating_col=False)
     datarec_binarized = binarizer.run(datarec)
     print(f"Binarized dataset: {len(datarec_binarized)} interactions.")
     print(f"Pipeline length: {len(datarec_binarized.pipeline.steps)}")
 
-    k_core_filter = UserItemIterativeKCore(cores=5)
+    k_core_filter = UserItemIterativeKCore(user_core=5, item_core=5)
     datarec_filtered = k_core_filter.run(datarec_binarized)
     print(f"Dataset after iterative k-Core: {datarec_filtered.n_users} users, {datarec_filtered.n_items} items, {len(datarec_filtered)} interactions.")
     print(f"Pipeline length: {len(datarec_filtered.pipeline.steps)}")

@@ -130,11 +130,11 @@ class PairwiseTorchDataset(BaseTorchDataset):
         """
         row = self.df.iloc[idx]
         user = row[self.user_col]
-        pos_item = row[self.item_col]
+        pos_items = row[self.item_col]
         neg_items = self.sample_negatives(user)
         return {
             "user": user,
-            "pos_item": pos_item,
+            "pos_items": pos_items,
             "neg_items": neg_items
         }
 

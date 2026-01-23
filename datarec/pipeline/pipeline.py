@@ -348,8 +348,8 @@ def _load_registry_dataset(dataset_name: str, version: str = "latest", **kwargs)
     Returns:
         Dataset: A dataset builder instance.
     """
-    from datarec.data.datarec_builder import Dataset
-    return Dataset(dataset_name=dataset_name, version=version, **kwargs)
+    from datarec.data.datarec_builder import RegisteredDataset
+    return RegisteredDataset(dataset_name=dataset_name, version=version, **kwargs)
 
 
 def _with_split_suffix(path: Path, split_name: str) -> Path:

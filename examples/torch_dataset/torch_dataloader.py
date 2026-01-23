@@ -11,7 +11,7 @@ from datarec.datasets import Movielens
 from torch.utils.data import DataLoader
 
 if __name__ == '__main__':
-    dr = Movielens(version='1m').prepare_and_load()
+    dr = Movielens(version='100k').prepare_and_load()
     torch_dataset = dr.to_torch_dataset(task="pairwise")
     loader = DataLoader(torch_dataset, batch_size=100, shuffle=True)
 

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.1] - 2026-01-23
+### Added
+- New tests for filters based on ratings
+- More examples
+- Datasets dowloadable from online registry
+
+### Changed
+- Now Binarize can retain only positive or negative feedback
+- User-Item kcores now explictly report "user_core" and "item_core"
+
+### Fixed
+- PairwiseTorchDataset output naming fixed
+- Variable names
+- Torch loader tests
+
+---
+
 ## [1.5.0] - 2026-01-18
 ### Added
 - New data format 'transactions blocks' with corresponding readers and writers

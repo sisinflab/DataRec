@@ -89,11 +89,18 @@ def test_iterativekcore_run(sample_iterative_datarec):
 
 # Test UserItemIterativeKCore
 def test_useritemiterativekcore_initialization():
-    useritemiterativekcore = UserItemIterativeKCore(cores=2)
-    assert useritemiterativekcore._cores == 2
+    useritemiterativekcore = UserItemIterativeKCore(user_core=2, item_core=2)
+    assert useritemiterativekcore._user_core == 2
+    assert useritemiterativekcore._item_core == 2
 
 
 def test_useritemiterativekcore_run(sample_iterative_datarec):
+    useritemiterativekcore = UserItemIterativeKCore(user_core=2, item_core=2)
+    result_datarec = useritemiterativekcore.run(sample_iterative_datarec)
+    assert len(result_datarec.data) == 7
+
+
+def test_useritemiterativekcore_legacy_cores(sample_iterative_datarec):
     useritemiterativekcore = UserItemIterativeKCore(cores=2)
     result_datarec = useritemiterativekcore.run(sample_iterative_datarec)
     assert len(result_datarec.data) == 7
@@ -115,12 +122,19 @@ def test_nroundskcore_run(sample_iterative_datarec):
 
 # Test UserItemNRoundsKCore
 def test_useritemnroundskcore_initialization():
-    useritemnroundskcore = UserItemNRoundsKCore(cores=2, rounds=2)
-    assert useritemnroundskcore._cores == 2
+    useritemnroundskcore = UserItemNRoundsKCore(rounds=2, user_core=2, item_core=2)
+    assert useritemnroundskcore._user_core == 2
+    assert useritemnroundskcore._item_core == 2
     assert useritemnroundskcore._rounds == 2
 
 
 def test_useritemnroundskcore_run(sample_iterative_datarec):
+    useritemnroundskcore = UserItemNRoundsKCore(rounds=2, user_core=2, item_core=2)
+    result_datarec = useritemnroundskcore.run(sample_iterative_datarec)
+    assert len(result_datarec.data) == 7
+
+
+def test_useritemnroundskcore_legacy_cores(sample_iterative_datarec):
     useritemnroundskcore = UserItemNRoundsKCore(cores=2, rounds=2)
     result_datarec = useritemnroundskcore.run(sample_iterative_datarec)
     assert len(result_datarec.data) == 7

@@ -1,5 +1,7 @@
+from typing import Optional
+
 from datarec.datasets.base import DatasetEntryPoint
-from datarec.data.datarec_builder import Dataset
+from datarec.data.datarec_builder import RegisteredDataset
 from datarec.registry.utils import available_datasets
 from datarec.data.resource import load_dataset_config
 
@@ -17,7 +19,7 @@ def latest_dataset_version(name: str) -> str:
     """Return the latest version for a registered dataset."""
     return load_dataset_config(name)["latest_version"]
 
-def load_dataset(name: str, version: str = "latest", **kwargs) -> Dataset:
+def load_dataset(name: str, version: str = "latest", **kwargs) -> RegisteredDataset:
     """
     Instantiate a dataset by registry name, validating available versions.
     """
@@ -38,6 +40,24 @@ def load_dataset(name: str, version: str = "latest", **kwargs) -> Dataset:
             return cls(version=version, **kwargs)
 
     raise ValueError(f"No entrypoint registered for dataset '{name}'.")
+
+
+def load_dataset_from_url(url: str, *, folder: Optional[str] = None, prepare_and_load: bool = True):
+    """
+    Load a dataset from a remote registry YAML.
+
+    Args:
+        url (str): URL to a registry version YAML.
+        folder (str | None): Optional output folder override.
+        prepare_and_load (bool): When True, returns a loaded DataRec; otherwise returns RegisteredDataset.
+
+    Returns:
+        RegisteredDataset | DataRec: The dataset entrypoint or loaded dataset.
+    """
+    dataset = RegisteredDataset.from_url(url, folder=folder)
+    if prepare_and_load:
+        return dataset.prepare_and_load()
+    return dataset
 
 class AlibabaiFashion(DatasetEntryPoint):
     dataset_name = "alibaba_ifashion"
