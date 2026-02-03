@@ -1,5 +1,6 @@
 from typing import Optional
 
+from urllib.parse import urlparse
 from datarec.datasets.base import DatasetEntryPoint
 from datarec.data.datarec_builder import RegisteredDataset
 from datarec.registry.utils import available_datasets
@@ -19,10 +20,22 @@ def latest_dataset_version(name: str) -> str:
     """Return the latest version for a registered dataset."""
     return load_dataset_config(name)["latest_version"]
 
+def _is_url(value: str) -> bool:
+    parsed = urlparse(value)
+    return parsed.scheme in ("http", "https") and bool(parsed.netloc)
+
+
 def load_dataset(name: str, version: str = "latest", **kwargs) -> RegisteredDataset:
     """
-    Instantiate a dataset by registry name, validating available versions.
+    Instantiate a dataset by registry name, or load a dataset from a remote registry YAML.
+
+    If `name` is a URL, this delegates to `load_dataset_from_url`.
     """
+    if _is_url(name):
+        prepare_and_load = kwargs.pop("prepare_and_load", True)
+        folder = kwargs.pop("folder", None)
+        return load_dataset_from_url(name, folder=folder, prepare_and_load=prepare_and_load)
+
     if name not in available_datasets():
         raise ValueError(f"Dataset '{name}' is not registered. Available: {', '.join(list_datasets())}")
 

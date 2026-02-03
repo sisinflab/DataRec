@@ -316,21 +316,24 @@ RESOURCE_TYPES = {
 }
 
 
-def load_dataset_config(dataset_name:str, dataset_version:str='')->dict:
+def load_dataset_config(dataset_name: str, dataset_version: str = "") -> dict:
     """
-    Given the dataset name returns the path of the dataset configuration file in the dataset registry
+    Load a dataset configuration from the local registry.
+
     Args:
         dataset_name (str): name of the dataset
-        dataset_version (str): version of the dataset
+        dataset_version (str): version of the dataset. When empty, load the dataset-level registry file.
     Returns:
         (dict): dataset configuration
     """
-    if dataset_version == '':
+    if dataset_version:
+        config_path = registry_version_filepath(dataset_name, dataset_version)
+    else:
         config_path = registry_dataset_filepath(dataset_name)
-        assert os.path.exists(config_path), f"Config file {config_path} does not exist"
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-        return config
+    assert os.path.exists(config_path), f"Config file {config_path} does not exist"
+    with open(config_path, "r") as f:
+        config = yaml.safe_load(f)
+    return config
 
 
 def load_dataset_config_from_url(url: str) -> dict:

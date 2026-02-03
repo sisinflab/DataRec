@@ -50,7 +50,7 @@ def compute_dataset_characteristics(dataset_name: str,
         print(f"Skip {dataset_name} {version}: file exists ({out_path})")
         return out_path
 
-    dset = Dataset(dataset_name=dataset_name, version=version)
+    dset = RegisteredDataset(dataset_name=dataset_name, version=version)
     dset.prepare(use_cache=use_cache)
     dr = dset.load(use_cache=use_cache, to_cache=use_cache, only_required=True)
 

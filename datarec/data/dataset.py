@@ -599,6 +599,32 @@ class DataRec:
                 'common', 'popular', 'most popular') to lists of item IDs.
         """
         return popularity(self.items_quartiles())
+    
+    def get_user_interactions(self, user_id: Any) -> pd.DataFrame:
+        """
+        Retrieves all interactions for a specific user.
+
+        Args:
+            user_id (Any): The ID of the user whose interactions are to be retrieved.
+        """
+        if user_id in self.users:
+            df = self.data[self.data[self.user_col] == user_id]
+            return df
+        else:   
+            raise ValueError(f"User ID {user_id} not found in dataset.")
+
+    def get_item_interactions(self, item_id: Any) -> pd.DataFrame:
+        """
+        Retrieves all interactions for a specific item.
+
+        Args:
+            item_id (Any): The ID of the item whose interactions are to be retrieved.
+        """
+        if item_id in self.items:
+            df = self.data[self.data[self.item_col] == item_id]
+            return df
+        else:   
+            raise ValueError(f"Item ID {item_id} not found in dataset.")
 
     def list_characteristics(self) -> list[str]:
         """Return the names of all characteristics that can be computed on this dataset."""

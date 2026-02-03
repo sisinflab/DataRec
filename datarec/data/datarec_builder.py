@@ -1,4 +1,5 @@
 import os
+import warnings
 from typing import List, Union, Dict, Any, Iterable, Collection
 from abc import ABC, abstractmethod
 from datarec.data.dataset import DataRec
@@ -8,8 +9,9 @@ from datarec.data.resource import (load_dataset_config,
                                    find_resource_by_type,
                                    find_ratings_resource,
                                    load_versions)
-from datarec.io.paths import dataset_raw_directory, RAW_DATA_FOLDER, pickle_version_filepath
+from datarec.io.paths import dataset_raw_directory, RAW_DATA_FOLDER
 from datarec.data.source import set_sources
+from datarec.io.utils import read_char_file
 
 
 
@@ -35,6 +37,13 @@ class RegisteredDataset:
         
         # initialize prepared resources dictionary to keep track of prepared resources
         self.prepared_resources = {}
+        self.registry_url = None
+
+        # load precomputed stats if available
+        self.characteristics = read_char_file(self.dataset_name, self.version)
+        
+    
+        
 
     @classmethod
     def from_url(cls, url: str, folder=None):
@@ -69,7 +78,69 @@ class RegisteredDataset:
 
         instance.prepared_resources = {}
         instance.registry_url = url
+        instance.characteristics = {}
         return instance
+
+    def _get_characteristic(self, name: str):
+        if not isinstance(self.characteristics, dict) or name not in self.characteristics:
+            warnings.warn(
+                f"Characteristic '{name}' not available for {self.dataset_name} {self.version}.",
+                RuntimeWarning,
+            )
+            return None
+        return self.characteristics.get(name)
+
+    @property
+    def n_users(self):
+        return self._get_characteristic("n_users")
+
+    @property
+    def n_items(self):
+        return self._get_characteristic("n_items")
+
+    @property
+    def n_interactions(self):
+        return self._get_characteristic("n_interactions")
+
+    @property
+    def space_size(self):
+        return self._get_characteristic("space_size")
+
+    @property
+    def space_size_log(self):
+        return self._get_characteristic("space_size_log")
+
+    @property
+    def shape(self):
+        return self._get_characteristic("shape")
+
+    @property
+    def shape_log(self):
+        return self._get_characteristic("shape_log")
+
+    @property
+    def density(self):
+        return self._get_characteristic("density")
+
+    @property
+    def density_log(self):
+        return self._get_characteristic("density_log")
+
+    @property
+    def gini_item(self):
+        return self._get_characteristic("gini_item")
+
+    @property
+    def gini_user(self):
+        return self._get_characteristic("gini_user")
+
+    @property
+    def ratings_per_user(self):
+        return self._get_characteristic("ratings_per_user")
+
+    @property
+    def ratings_per_item(self):
+        return self._get_characteristic("ratings_per_item")
 
 
     def find_resource_by_constraints(

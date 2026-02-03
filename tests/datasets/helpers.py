@@ -1,3 +1,4 @@
+import os
 import pytest
 
 from datarec.data.datarec_builder import RegisteredDataset
@@ -19,7 +20,10 @@ def check_dataset(dataset_name: str, version: str, *, only_required: bool = True
     """
     Prepare and load a dataset version, performing basic sanity checks.
     """
-    dset = Dataset(dataset_name=dataset_name, version=version)
+    manual_datasets = {"yelp", "tmall", "mind"}
+    if dataset_name in manual_datasets and not os.getenv("DATAREC_MANUAL"):
+        pytest.skip("Manual dataset download required; set DATAREC_MANUAL=1 to enable.")
+    dset = RegisteredDataset(dataset_name=dataset_name, version=version)
     dset.prepare(use_cache=True, only_required=only_required)
     dr = dset.load(use_cache=True, to_cache=False, only_required=only_required)
 

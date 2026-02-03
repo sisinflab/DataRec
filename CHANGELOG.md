@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.2] - 2026-02-03
+### Added
+- get_user_interactions method in DataRec class
+- get_item_interactions method in DataRec class
+- examples on how to show precomputed characteristics
+
+### Changed
+- now it is possible to display precomputed characteristics before loading the dataset
+
+### Fixed
+- Fixed bug that stopped datasets in the registry to be loaded correctly
+
+---
+
 ## [1.5.1] - 2026-01-23
 ### Added
 - New tests for filters based on ratings
