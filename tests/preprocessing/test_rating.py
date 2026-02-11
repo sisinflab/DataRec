@@ -123,3 +123,8 @@ def test_filter_out_duplicated_interactions_requires_timestamp():
     flt = FilterOutDuplicatedInteractions(keep='earliest')
     with pytest.raises(ValueError):
         flt.run(datarec, verbose=False)
+
+
+def test_filter_out_duplicated_interactions_invalid_strategy():
+    with pytest.raises(ValueError):
+        FilterOutDuplicatedInteractions(keep='invalid')

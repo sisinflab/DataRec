@@ -10,7 +10,7 @@ filename = 'dataset.tsv'
 # --- SEQUENTIAL DATASETS ---
 
 
-## --- TABULAR INLINE DATASETS ---
+# --- TABULAR INLINE DATASETS ---
 
  # interactions only with header
 download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/sequences/tabular-inline/interactions/dataset.tsv')
@@ -55,6 +55,7 @@ print(read_sequence_tabular_implicit(os.path.join(output_folder, filename), head
 
 download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/sequences/json/interactions/dataset.json')
 print(read_sequences_json(os.path.join(output_folder, filename), user_col='user', item_col='item'))
+
 
 download_example_by_url(output_folder=output_folder, filename=filename, url='https://raw.githubusercontent.com/sisinflab/DataRecDatasets/refs/heads/main/sequences/json-items/interactions/dataset.json')
 print(read_sequences_json_items(os.path.join(output_folder, filename), user_col='user', item_col='item'))

@@ -32,6 +32,14 @@ def test_filter_after(sample_data):
     assert (result.data['timestamp'] > 250).all()
 
 
+def test_filter_after_includes_threshold(sample_data):
+    filter_by_time = FilterByTime(time_threshold=200.0, drop='after')
+    result = filter_by_time.run(sample_data)
+
+    assert len(result.data) == 3
+    assert (result.data['timestamp'] >= 200).all()
+
+
 def test_filter_no_timestamp_column():
     data = {
         'user': [1, 2],

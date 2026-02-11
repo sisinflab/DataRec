@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "datarec-lib"
-version = "1.5.2"
+version = "1.5.3"
 description = "Standardized & reproducible data management for recommender systems."
 readme = "README.md"
 requires-python = ">=3.9,<3.15"

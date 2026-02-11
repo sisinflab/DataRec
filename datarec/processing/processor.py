@@ -41,6 +41,7 @@ class Processor:
                     timestamp=datarec.timestamp_col),
             derives_from=datarec,
             dataset_name=datarec.dataset_name,
+            version_name=datarec.version_name,
             pipeline=pipeline
         )
 

@@ -53,3 +53,13 @@ def read_char_file(dataset_name: str, dataset_version: str) -> dict:
         raise ValueError("Characteristics file does not match the specified dataset name and version.")
     return characteristics['characteristics']
 
+import inspect
+
+def get_call_context():
+    frame = inspect.currentframe()
+    caller = frame.f_back if frame and frame.f_back else None
+    
+    if caller is None:
+        return "<unknown>", {}
+    
+    return caller.f_code.co_name, caller.f_locals.copy()

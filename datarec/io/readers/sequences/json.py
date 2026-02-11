@@ -3,9 +3,11 @@ import json
 import pandas as pd
 from typing import Optional, Dict, Any, List
 from datarec.io.rawdata import RawData
-from datarec.io.readers._decorators import annotate_rawdata_output
+from typing import cast
+from datarec.io.readers._decorators import annotate_datarec_output
+from datarec import DataRec
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_sequences_json(
     filepath: str,
     *,
@@ -13,7 +15,9 @@ def read_sequences_json(
     item_col: str = "item",
     rating_col: Optional[str] = None,
     timestamp_col: Optional[str] = None,
-) -> RawData:
+    dataset_name: str = 'Unknown Dataset',
+    version_name: str = 'Unknown Version',
+) -> DataRec:
     """
     Reads a JSON file representing sequential interaction data in the form:
     
@@ -33,9 +37,12 @@ def read_sequences_json(
         item_col: Key containing the item field inside each event.
         rating_col: Key containing the rating field inside each event.
         timestamp_col: Key containing the timestamp field inside each event.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: A RawData object containing all interactions exploded row-by-row.
+        DataRec: A DataRec object containing all interactions exploded row-by-row.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -75,17 +82,17 @@ def read_sequences_json(
     data = data.reset_index(drop=True)
 
     # Final RawData object
-    raw = RawData(
+    rawdata = RawData(
         data,
         user=user_col,
         item=item_col,
         rating=rating_col,
-        timestamp=timestamp_col,
-    )
+        timestamp=timestamp_col,)
 
-    return raw
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_sequences_json_items(
     filepath: str,
     *,
@@ -93,7 +100,9 @@ def read_sequences_json_items(
     item_col: str = "item",
     rating_col: Optional[str] = None,
     timestamp_col: Optional[str] = None,
-) -> RawData:
+    dataset_name: str = 'Unknown Dataset',
+    version_name: str = 'Unknown Version',
+) -> DataRec:
     """
     Reads a JSON file representing sequential interaction data in the form:
 
@@ -111,9 +120,11 @@ def read_sequences_json_items(
         item_col: Name assigned to the item column in the output.
         rating_col: Not supported for item-only JSON.
         timestamp_col: Not supported for item-only JSON.
-
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
     Returns:
-        RawData: A RawData object containing all interactions exploded row-by-row.
+        DataRec: A DataRec object containing all interactions exploded row-by-row.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if rating_col is not None or timestamp_col is not None:
         raise ValueError(
@@ -159,7 +170,7 @@ def read_sequences_json_items(
     data = pd.DataFrame(rows).reset_index(drop=True)
 
     # Final RawData object
-    raw = RawData(
+    rawdata = RawData(
         data,
         user=user_col,
         item=item_col,
@@ -167,9 +178,10 @@ def read_sequences_json_items(
         timestamp=timestamp_col,
     )
 
-    return raw
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_sequences_json_array(
     filepath: str,
     *,
@@ -178,7 +190,9 @@ def read_sequences_json_array(
     rating_col: Optional[str] = None,
     timestamp_col: Optional[str] = None,
     sequence_key: str = "sequence",
-) -> RawData:
+    dataset_name: str = 'Unknown Dataset',
+    version_name: str = 'Unknown Version',
+) -> DataRec:
     """
     Reads a JSON file representing sequential interaction data in the form
     of an ARRAY of user-sequence objects, e.g.:
@@ -211,10 +225,13 @@ def read_sequences_json_array(
         rating_col: Key containing the rating field inside each event.
         timestamp_col: Key containing the timestamp field inside each event.
         sequence_key: Key containing the list of events for each user.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: A RawData object containing all interactions exploded
+        DataRec: A DataRec object containing all interactions exploded
                  row-by-row.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -290,4 +307,5 @@ def read_sequences_json_array(
         timestamp=timestamp_col,
     )
 
-    return raw
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, raw)

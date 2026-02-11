@@ -29,8 +29,8 @@ def test_read_sequence_tabular_inline(tmp_path):
     )
     # Expect 5 rows exploded
     assert len(rd.data) == 5
-    assert set(rd.data[rd.user]) == {"u1", "u2"}
-    assert set(rd.data[rd.item]) == {"a", "b", "c", "d", "e"}
+    assert set(rd.data[rd._user_col]) == {"u1", "u2"}
+    assert set(rd.data[rd._item_col]) == {"a", "b", "c", "d", "e"}
 
     rd_enc = read_sequence_tabular_inline(
         str(p),
@@ -44,10 +44,10 @@ def test_read_sequence_tabular_inline(tmp_path):
         encode_ids=True,
         chunksize=1,
     )
-    assert rd_enc.user_encoder is not None
-    assert rd_enc.item_encoder is not None
-    assert rd_enc.data[rd_enc.user].max() >= 1
-    assert rd_enc.data[rd_enc.item].max() >= 2
+    assert rd_enc.is_encoded(on="users") is True
+    assert rd_enc.is_encoded(on="items") is True
+    assert rd_enc.data[rd_enc._user_col].max() >= 1
+    assert rd_enc.data[rd_enc._item_col].max() >= 2
 
 
 def test_read_sequence_tabular_wide(tmp_path):
@@ -67,8 +67,8 @@ def test_read_sequence_tabular_wide(tmp_path):
         col_sep="\t"
     )
     assert len(rd.data) == 3
-    assert set(rd.data[rd.user]) == {"i2", "u1"}  # header row included as data
-    assert set(rd.data[rd.item]) >= {"i1", "i2", "i3"}
+    assert set(rd.data[rd.user_col]) == {"i2", "u1"}  # header row included as data
+    assert set(rd.data[rd.item_col]) >= {"i1", "i2", "i3"}
 
 
 def test_read_sequence_tabular_implicit(tmp_path):
@@ -91,5 +91,5 @@ def test_read_sequence_tabular_implicit(tmp_path):
         encode_ids=True,
     )
     assert len(rd.data) == 5
-    assert rd.user_encoder is not None
-    assert rd.item_encoder is not None
+    assert rd.is_encoded(on="users") is True
+    assert rd.is_encoded(on="items") is True

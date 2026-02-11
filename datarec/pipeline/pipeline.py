@@ -167,15 +167,8 @@ class Pipeline:
         filename = params.pop("filename", None)
         if not filename:
             raise ValueError("Read step requires 'filename' in params.")
-        dataset_name = params.pop("dataset_name", None)
-        version_name = params.pop("version_name", "file")
         params["filepath"] = str(Path(input_folder) / filename)
         loaded = func(**params)
-        if isinstance(loaded, RawData):
-            from datarec.data.dataset import DataRec
-            if dataset_name is None:
-                dataset_name = Path(filename).stem
-            loaded = DataRec(rawdata=loaded, dataset_name=dataset_name, version_name=version_name)
         if hasattr(loaded, "data"):
             return loaded
         raise ValueError(f"Reader '{step.operation}' did not return a DataRec/RawData.")

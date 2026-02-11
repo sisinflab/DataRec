@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.3] - 2026-02-11
+### Added
+- new tests
+
+### Changed
+- now readers return a datarec object
+
+### Fixed
+- Pipeline now works with new readers
+
+---
+
 ## [1.5.2] - 2026-02-03
 ### Added
 - get_user_interactions method in DataRec class

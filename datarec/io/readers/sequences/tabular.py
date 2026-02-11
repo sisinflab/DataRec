@@ -2,9 +2,10 @@ import pandas as pd
 import os
 import csv
 import numpy as np
-from typing import Optional, List, Union
+from typing import Optional, List, Union, cast
 from datarec.io.rawdata import RawData
-from datarec.io.readers._decorators import annotate_rawdata_output
+from datarec.io.readers._decorators import annotate_datarec_output
+from datarec import DataRec
 
 
 class IncrementalEncoder:
@@ -52,7 +53,7 @@ class IncrementalEncoder:
         return self._reverse
 
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_sequence_tabular_inline(
     filepath: str,
     *,
@@ -69,7 +70,9 @@ def read_sequence_tabular_inline(
     stream: bool = False,
     encode_ids: bool = False,
     chunksize: int = 100_000,
-) -> RawData:
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a file where interaction sequences are stored in a single string column.
     
@@ -91,9 +94,12 @@ def read_sequence_tabular_inline(
         stream: If True, process the file in chunks to reduce peak memory.
         encode_ids: If True, encode user/item to int ids using IncrementalEncoder (streaming or full).
         chunksize: Number of rows per chunk when streaming.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: Transactional data.
+        DataRec: Transactional data.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -114,7 +120,7 @@ def read_sequence_tabular_inline(
         read_kwargs["names"] = cols
 
     if stream:
-        return _read_sequence_tabular_inline_stream(
+        rawdata = _read_sequence_tabular_inline_stream(
             filepath=filepath,
             user_col=user_col,
             sequence_col=sequence_col,
@@ -126,8 +132,10 @@ def read_sequence_tabular_inline(
             encode_ids=encode_ids,
             chunksize=chunksize,
         )
+        # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+        return cast(DataRec, rawdata)
 
-    return _read_sequence_tabular_inline_full(
+    rawdata = _read_sequence_tabular_inline_full(
         filepath=filepath,
         user_col=user_col,
         sequence_col=sequence_col,
@@ -138,6 +146,8 @@ def read_sequence_tabular_inline(
         fallback_engine=fallback_engine,
         encode_ids=encode_ids,
     )
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)
 
 
 def _read_sequence_tabular_inline_stream(
@@ -322,7 +332,7 @@ def _process_chunk(df_chunk,
             encoded_meta.setdefault(mc, []).append(df_chunk[mc].to_numpy())
 
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_sequence_tabular_wide(
     filepath: str,
     *,
@@ -331,7 +341,9 @@ def read_sequence_tabular_wide(
     col_sep: str = "\t",
     header: Optional[int] = None,
     encode_ids: bool = False,
-) -> RawData:
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a file containing variable-length interaction sequences (ragged).
     
@@ -343,9 +355,12 @@ def read_sequence_tabular_wide(
         item_col: Name to assign to the item column.
         col_sep: Delimiter used in the file.
         header: Row number (0-indexed) to use as the header (to be skipped).
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: Transactional DataFrame.
+        DataRec: Transactional DataFrame.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -398,10 +413,12 @@ def read_sequence_tabular_wide(
         user_encoder = u_enc.forward
         item_encoder = i_enc.forward
 
-    return RawData(df_long, user=user_col, item=item_col, user_encoder=user_encoder, item_encoder=item_encoder)
+    rawdata = RawData(df_long, user=user_col, item=item_col, user_encoder=user_encoder, item_encoder=item_encoder)
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)
 
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_sequence_tabular_implicit(
     filepath: str,
     *,
@@ -411,7 +428,9 @@ def read_sequence_tabular_implicit(
     header: Optional[int] = None,
     drop_length_col: bool = True,
     encode_ids: bool = False,
-) -> RawData:
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a tabular file where each row represents a sequence with an
     implicit identifier (row-based), optionally starting with a declared
@@ -433,10 +452,13 @@ def read_sequence_tabular_implicit(
         header: Optional row index to skip as header.
         drop_length_col: If True, the first column is treated as sequence
                          length and discarded.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: Transactional DataFrame where each sequence is treated
+        DataRec: Transactional DataFrame where each sequence is treated
                  as a pseudo-user.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -495,4 +517,6 @@ def read_sequence_tabular_implicit(
         user_encoder = u_enc.forward
         item_encoder = i_enc.forward
 
-    return RawData(df_long, user=user_col, item=item_col, user_encoder=user_encoder, item_encoder=item_encoder)
+    rawdata = RawData(df_long, user=user_col, item=item_col, user_encoder=user_encoder, item_encoder=item_encoder)
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)

@@ -60,3 +60,19 @@ def test_binarize_missing_rating_column():
     # Without a rating column, binarization should fail when accessing the missing field
     with pytest.raises(KeyError):
         binarizer.run(datarec)
+
+
+def test_binarize_keep_negative_without_drop(sample_data):
+    binarizer = Binarize(threshold=3.0, keep='negative', drop_rating_col=False)
+    result = binarizer.run(sample_data)
+
+    assert len(result.data) == 2
+    assert (result.data['rating'] == 0).sum() == 2
+
+
+def test_binarize_keep_negative_with_drop(sample_data):
+    binarizer = Binarize(threshold=3.0, keep='negative', drop_rating_col=True)
+    result = binarizer.run(sample_data)
+
+    assert len(result.data) == 2
+    assert 'rating' not in result.data.columns

@@ -24,16 +24,16 @@ def test_read_sequences_json(tmp_path):
         '}\n',
         encoding="utf-8",
     )
-    rd = read_sequences_json(
+    dr = read_sequences_json(
         str(p),
         user_col="user",
         item_col="item",
         rating_col="rating",
         timestamp_col="timestamp",
     )
-    assert len(rd.data) == 3
-    assert set(rd.data[rd.user]) == {"u1", "u2"}
-    assert set(rd.data[rd.item]) == {"i1", "i2", "i3"}
+    assert len(dr.data) == 3
+    assert set(dr.data[dr._user_col]) == {"u1", "u2"}
+    assert set(dr.data[dr._item_col]) == {"i1", "i2", "i3"}
 
 
 def test_read_sequences_json_array(tmp_path):
@@ -53,8 +53,8 @@ def test_read_sequences_json_array(tmp_path):
         rating_col="rating",
     )
     assert len(rd.data) == 3
-    assert set(rd.data[rd.user]) == {"u1", "u2"}
-    assert set(rd.data[rd.item]) == {1, 2, 3}
+    assert set(rd.data[rd._user_col]) == {"u1", "u2"}
+    assert set(rd.data[rd._item_col]) == {1, 2, 3}
 
 
 def test_read_sequences_json_items(tmp_path):
@@ -69,9 +69,9 @@ def test_read_sequences_json_items(tmp_path):
     )
 
     assert len(rd.data) == 4
-    assert set(rd.data[rd.user]) == {"0", "1"}
-    assert list(rd.data[rd.data[rd.user] == "0"][rd.item]) == [4755, 9066, 9765]
-    assert list(rd.data[rd.data[rd.user] == "1"][rd.item]) == [2975]
+    assert set(rd.data[rd._user_col]) == {"0", "1"}
+    assert list(rd.data[rd.data[rd._user_col] == "0"][rd._item_col]) == [4755, 9066, 9765]
+    assert list(rd.data[rd.data[rd._user_col] == "1"][rd._item_col]) == [2975]
 
 
 def test_read_sequences_json_items_requires_object(tmp_path):

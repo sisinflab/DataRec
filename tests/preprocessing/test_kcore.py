@@ -106,6 +106,16 @@ def test_useritemiterativekcore_legacy_cores(sample_iterative_datarec):
     assert len(result_datarec.data) == 7
 
 
+def test_useritemiterativekcore_invalid_cores_length():
+    with pytest.raises(TypeError):
+        UserItemIterativeKCore(cores=[2, 3, 4])
+
+
+def test_useritemiterativekcore_invalid_cores_type():
+    with pytest.raises(TypeError):
+        UserItemIterativeKCore(cores="invalid")
+
+
 # Test NRoundsKCore
 def test_nroundskcore_initialization():
     nroundskcore = NRoundsKCore(columns=['user_id', 'item_id'], cores=[2, 2], rounds=2)
@@ -138,3 +148,18 @@ def test_useritemnroundskcore_legacy_cores(sample_iterative_datarec):
     useritemnroundskcore = UserItemNRoundsKCore(cores=2, rounds=2)
     result_datarec = useritemnroundskcore.run(sample_iterative_datarec)
     assert len(result_datarec.data) == 7
+
+
+def test_useritemnroundskcore_invalid_cores_length():
+    with pytest.raises(TypeError):
+        UserItemNRoundsKCore(cores=[2, 3, 4], rounds=2)
+
+
+def test_useritemnroundskcore_invalid_cores_type():
+    with pytest.raises(TypeError):
+        UserItemNRoundsKCore(cores="invalid", rounds=2)
+
+
+def test_nroundskcore_invalid_rounds_type():
+    with pytest.raises(TypeError):
+        NRoundsKCore(columns=['user_id', 'item_id'], cores=[2, 2], rounds="invalid")
