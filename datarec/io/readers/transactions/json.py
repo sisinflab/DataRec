@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 import os
-from typing import Optional
+from typing import Optional, cast
 from datarec.io.rawdata import RawData
 from datarec.io.readers.transactions.tabular import IncrementalEncoder  # reuse lightweight encoder
-from datarec.io.readers._decorators import annotate_rawdata_output
+from datarec.io.readers._decorators import annotate_datarec_output
+from datarec import DataRec
 
 
 def read_transactions_json_base(
@@ -148,7 +149,7 @@ def _read_transactions_json_stream(
     )
 
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_transactions_json(
     filepath: str, 
     *,
@@ -159,7 +160,10 @@ def read_transactions_json(
     lines: bool = True,
     stream: bool = False,
     encode_ids: bool = False,
-    chunksize: int = 100_000) -> RawData:
+    chunksize: int = 100_000,
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a JSON (or JSON Lines) file and returns it as a RawData object.
     
@@ -172,11 +176,14 @@ def read_transactions_json(
         rating_col: JSON key corresponding to the rating field.
         timestamp_col: JSON key corresponding to the timestamp field.
         lines: If True, reads the file as a JSON object per line (JSONL).
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: The loaded data.
+        DataRec: The loaded data.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
-    return read_transactions_json_base(
+    rawdata = read_transactions_json_base(
         filepath,
         user_col=user_col,
         item_col=item_col,
@@ -187,3 +194,5 @@ def read_transactions_json(
         encode_ids=encode_ids,
         chunksize=chunksize,
     )
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)

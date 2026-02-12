@@ -161,7 +161,7 @@ class Interactions(Resource):
             if schema is None:
                 raise ValueError("Schema must be provided for transactions_tabular format")
 
-            dataset = read_transactions_tabular(self.path(), 
+            datarec_ = read_transactions_tabular(self.path(), 
                                                 sep=schema['sep'],
                                                 user_col=schema['user_col'],
                                                 item_col=schema['item_col'],
@@ -174,35 +174,40 @@ class Interactions(Resource):
                                                 fallback_engine=schema.get('fallback_engine', 'python'),
                                                 stream=schema.get('stream', False),
                                                 encode_ids=schema.get('encode_ids', False),
-                                                chunksize=schema.get('chunksize', 100_000))
+                                                chunksize=schema.get('chunksize', 100_000),
+                                                dataset_name=self.dataset_name,
+                                                version_name=self.version,)
         
         elif self.format == 'transactions_json':
             schema = self.schema
             if schema is None:
                 raise ValueError("Schema must be provided for transactions json format")
 
-            dataset = read_transactions_json(self.path(),
+            datarec_ = read_transactions_json(self.path(),
                                              user_col=schema['user_col'],
                                              item_col=schema['item_col'],
                                              rating_col=schema.get('rating_col', None),
                                              timestamp_col=schema.get('timestamp_col', None),
                                              stream=schema.get('stream', False),
                                              encode_ids=schema.get('encode_ids', False),
-                                             chunksize=schema.get('chunksize', 100_000))
+                                             chunksize=schema.get('chunksize', 100_000),
+                                             dataset_name=self.dataset_name,
+                                            version_name=self.version,)
         
         elif self.format == 'transactions_jsonl':
             schema = self.schema
             if schema is None:
                 raise ValueError("Schema must be provided for transactions jsonl format")
 
-            dataset = read_transactions_jsonl(self.path(),
+            datarec_ = read_transactions_jsonl(self.path(),
                                               user_col=schema['user_col'],
                                               item_col=schema['item_col'],
                                               rating_col=schema.get('rating_col', None),
                                               timestamp_col=schema.get('timestamp_col', None),
                                               stream=schema.get('stream', False),
                                               encode_ids=schema.get('encode_ids', False),
-                                              chunksize=schema.get('chunksize', 100_000))
+                                              chunksize=schema.get('chunksize', 100_000),
+                                              version_name=self.version,)
 
         elif self.format == 'sequence_tabular_inline':
             schema = self.schema
@@ -213,70 +218,78 @@ class Interactions(Resource):
             if sequence_col is None:
                 raise ValueError("sequence_col must be provided in schema for sequence tabular inline format")
 
-            dataset = read_sequence_tabular_inline(
-                self.path(),
-                user_col=schema['user_col'],
-                sequence_col=sequence_col,
-                sequence_sep=schema.get('sequence_sep', ' '),
-                timestamp_col=schema.get('timestamp_col', None),
-                meta_cols=schema.get('meta_cols', None),
-                col_sep=schema.get('col_sep', ','),
-                header=schema.get('header', 0),
-                cols=schema.get('cols', None),
-                engine=schema.get('engine', 'c'),
-                fallback_engine=schema.get('fallback_engine', 'python'),
-                stream=schema.get('stream', schema.get('stream_encode', False)),
-                encode_ids=schema.get('encode_ids', False),
-                chunksize=schema.get('chunksize', 100_000),
-            )
+            datarec_ = read_sequence_tabular_inline(self.path(),
+                                                    user_col=schema['user_col'],
+                                                    sequence_col=sequence_col,
+                                                    sequence_sep=schema.get('sequence_sep', ' '),
+                                                    timestamp_col=schema.get('timestamp_col', None),
+                                                    meta_cols=schema.get('meta_cols', None),
+                                                    col_sep=schema.get('col_sep', ','),
+                                                    header=schema.get('header', 0),
+                                                    cols=schema.get('cols', None),
+                                                    engine=schema.get('engine', 'c'),
+                                                    fallback_engine=schema.get('fallback_engine', 'python'),
+                                                    stream=schema.get('stream', schema.get('stream_encode', False)),
+                                                    encode_ids=schema.get('encode_ids', False),
+                                                    chunksize=schema.get('chunksize', 100_000),
+                                                    dataset_name=self.dataset_name,
+                                                    version_name=self.version,)
 
         elif self.format == 'sequence_tabular_wide':
             schema = self.schema
             if schema is None:
                 raise ValueError("Schema must be provided for sequence tabular wide format")
 
-            dataset = read_sequence_tabular_wide(self.path(),
+            datarec_ = read_sequence_tabular_wide(self.path(),
                                                  user_col=schema.get('user_col', 'user'),
                                                  item_col=schema.get('item_col', 'item'),
                                                  col_sep=schema.get('col_sep', ' '),
                                                  header=schema.get('header', None),
-                                                 encode_ids=schema.get('encode_ids', False))
+                                                 encode_ids=schema.get('encode_ids', False),
+                                                 dataset_name=self.dataset_name,
+                                                 version_name=self.version,)
 
         elif self.format == 'sequence_tabular_implicit':
             schema = self.schema
             if schema is None:
                 raise ValueError("Schema must be provided for sequence tabular implicit format")
 
-            dataset = read_sequence_tabular_implicit(self.path(),
+            datarec_ = read_sequence_tabular_implicit(self.path(),
                                                      user_col=schema.get('user_col', 'sequence_id'),
                                                      item_col=schema.get('item_col', 'item'),
                                                      col_sep=schema.get('col_sep', ' '),
                                                      header=schema.get('header', None),
                                                      drop_length_col=schema.get('drop_length_col', True),
-                                                     encode_ids=schema.get('encode_ids', False))
+                                                     encode_ids=schema.get('encode_ids', False),
+                                                     dataset_name=self.dataset_name,
+                                                     version_name=self.version,)
 
         elif self.format == 'sequence_json':
             schema = self.schema
             if schema is None:
                 raise ValueError("Schema must be provided for sequence json format")
 
-            dataset = read_sequences_json(self.path(),
+            datarec_ = read_sequences_json(self.path(),
                                           user_col=schema['user_col'],
                                           item_col=schema['item_col'],
                                           rating_col=schema.get('rating_col', None),
-                                          timestamp_col=schema.get('timestamp_col', None))
+                                          timestamp_col=schema.get('timestamp_col', None),
+                                          dataset_name=self.dataset_name,
+                                          version_name=self.version,)
             
         elif self.format == 'sequence_json_array':
             schema = self.schema
             if schema is None:
                 raise ValueError("Schema must be provided for sequence json array format")
 
-            dataset = read_sequences_json_array(self.path(),
+            datarec_ = read_sequences_json_array(self.path(),
                                                 user_col=schema['user_col'],
                                                 item_col=schema['item_col'],
                                                 rating_col=schema.get('rating_col', None),
                                                 timestamp_col=schema.get('timestamp_col', None),
-                                                sequence_key=schema.get('sequence_key', 'sequence'))
+                                                sequence_key=schema.get('sequence_key', 'sequence'),
+                                                dataset_name=self.dataset_name,
+                                                version_name=self.version,)
 
         else:
             raise NotImplementedError(f"Format {self.format} not supported for resource loading.")
@@ -288,13 +301,14 @@ class Interactions(Resource):
             print("Warning: version is not set for the resource. Using 'unknown_version'.")
             self.version = "unknown_version"
 
-        dr = DataRec(rawdata=dataset, dataset_name=self.dataset_name, version_name=self.version, registry_dataset=True)
+        # set the origin of the dataset to registry, since it is being loaded from a resource file defined in the registry
+        datarec_.set_origin_registry()
         
         # cache the dataset in pickle format
         if to_cache:
-            dr.to_pickle()
+            datarec_.to_pickle()
 
-        return dr
+        return datarec_
     
     def free_cache(self):
         """

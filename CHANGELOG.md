@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.4] - 2026-02-12
+### Added
+- Pipeline read/load steps in a DataRec object can be set with new methods that check coherency
+
+### Changed
+- Now a DataRec object does not accept pipeline as argument
+
+### Fixed
+- Fixed pipeline read/load steps when creating a new DataRec 
+
+---
+
 ## [1.5.3] - 2026-02-11
 ### Added
 - new tests

@@ -35,8 +35,6 @@ class DataRec:
             copy: bool = False,
             dataset_name: str = 'datarec',
             version_name: str = 'no_version_provided',
-            pipeline: Optional[Pipeline] = None,
-            registry_dataset: bool = False,
             *args,
             **kwargs
     ):
@@ -71,18 +69,31 @@ class DataRec:
                 rawdata_step = rawdata.pipeline_step
         
         # PIPELINE INITIALIZATION
-        if pipeline:
-            self.pipeline = pipeline
-        else:
-            if registry_dataset:
-                self.pipeline = Pipeline()
-                self.pipeline.add_step("load", "registry_dataset", {"dataset_name": self.dataset_name, "version": self.version_name})
-            elif rawdata_step is not None:
-                self.pipeline = Pipeline()
-                self.pipeline.steps.append(rawdata_step)
+        # if pipeline:
+        #     self.pipeline = pipeline
+        # else:
+        #     # if the dataset is from a registry, we create a pipeline with a single load step. It overwrites the rawdata step if it exists.
+        #     # If it is from rawdata, but not from a registry, we create a pipeline with the rawdata's pipeline step. 
+        #     # Otherwise, we create an empty pipeline and warn the user.
+        #     if registry_dataset:
+        #         self.pipeline = Pipeline()
+        #         self.pipeline.add_step("load", "registry_dataset", {"dataset_name": self.dataset_name, "version": self.version_name})
+        #     elif rawdata_step is not None:
+        #         self.pipeline = Pipeline()
+        #         self.pipeline.steps.append(rawdata_step)
+        #     else:
+        #         warnings.warn("No pipeline provided. Initializing empty pipeline.")
+        #         self.pipeline = Pipeline()
+        self.pipeline = Pipeline()
+        self._origin: str = "unknown"
+
+        if rawdata_step:
+            if rawdata_step.name == "load":
+                self.set_origin_registry()
+            elif rawdata_step.name == "read":
+                self.set_origin_file(rawdata_step)
             else:
-                warnings.warn("No pipeline provided. Initializing empty pipeline.")
-                self.pipeline = Pipeline()
+                warnings.warn(f"Unrecognized pipeline step '{rawdata_step.name}' in RawData. Setting origin to 'unknown'.")
 
         # ------------------------------------
         # --------- STANDARD COLUMNS ---------
@@ -118,6 +129,8 @@ class DataRec:
         self._transactions = None
 
         self.characteristics = CharacteristicAccessor(self)
+
+        self._origin= "unknown"
         
 
     def __str__(self):
@@ -385,6 +398,13 @@ class DataRec:
         if self._transactions is None:
             self._transactions = len(self.data)
         return self._transactions
+    
+    @property
+    def origin(self):
+        """
+        Returns the origin of the dataset (e.g., 'unknown', 'registry', 'file').
+        """
+        return self._origin
 
     # --- ID ENCODING/DECODING FUNCTIONS ---
 
@@ -676,6 +696,42 @@ class DataRec:
         raw.rating = self.rating_col
         raw.timestamp = self.timestamp_col
         return raw
+    
+    ##### PIPELINE FUNCTIONS #####
+
+
+    def set_origin_file(self, pipeline_step) -> None:
+        """
+        Set the origin of the dataset.
+
+        Args:
+            origin (str): A string describing the origin of the dataset (e.g., 'registry', 'file', 'unknown').
+        """
+        if pipeline_step.name != "read":
+            raise ValueError(f"Pipeline step must be a read step to set file origin. Found step name: {pipeline_step.name}")
+        if self.pipeline.steps:
+            warnings.warn("Prepending file load step to the pipeline.")
+            self.pipeline.steps.insert(0, pipeline_step)
+        else:
+            self.pipeline.steps.append(pipeline_step)
+        self._origin = "file"
+                
+
+    def set_origin_registry(self) -> None:
+        """
+        Set the origin of the dataset to 'registry'.
+        """
+        from datarec.pipeline import PipelineStep
+        pipeline_step = PipelineStep("load", "registry_dataset", {"dataset_name": self.dataset_name, "version": self.version_name})
+        if self.pipeline.steps:
+            if self.pipeline.steps[0].name == "read":
+                self.pipeline.steps[0] = pipeline_step
+            else:
+                warnings.warn("First pipeline step is not a read step. Prepending registry load step to the pipeline.")
+                self.pipeline.steps.insert(0, pipeline_step)
+        else:
+            self.pipeline.steps.append(pipeline_step)
+        self._origin = "registry"
 
     def save_pipeline(self, filepath: str) -> None:
         """

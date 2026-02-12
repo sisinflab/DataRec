@@ -1,9 +1,10 @@
 import pandas as pd
 import os
 import numpy as np
-from typing import Optional, List, Union
+from typing import Optional, List, Union, cast
 from datarec.io.rawdata import RawData
-from datarec.io.readers._decorators import annotate_rawdata_output
+from datarec.io.readers._decorators import annotate_datarec_output
+from datarec import DataRec
 
 
 class IncrementalEncoder:
@@ -30,7 +31,7 @@ class IncrementalEncoder:
         return self._forward
 
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_transactions_tabular(
     filepath: str,
     *,
@@ -46,7 +47,10 @@ def read_transactions_tabular(
     fallback_engine: Optional[str] = 'python',
     stream: bool = False,
     encode_ids: bool = False,
-    chunksize: int = 100_000) -> RawData:
+    chunksize: int = 100_000,
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a tabular data file (CSV, TSV, etc.) into a RawData object.
 
@@ -66,9 +70,12 @@ def read_transactions_tabular(
         stream: If True, read in chunks to reduce memory.
         encode_ids: If True, encode user/item to int ids using IncrementalEncoder.
         chunksize: Rows per chunk when streaming.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: The loaded data.
+        DataRec: The loaded data.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -78,7 +85,7 @@ def read_transactions_tabular(
         read_kwargs["names"] = cols
 
     if stream:
-        return _read_transactions_tabular_stream(
+        rawdata = _read_transactions_tabular_stream(
             filepath=filepath,
             user_col=user_col,
             item_col=item_col,
@@ -89,6 +96,8 @@ def read_transactions_tabular(
             encode_ids=encode_ids,
             chunksize=chunksize,
         )
+        # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+        return cast(DataRec, rawdata)
 
     try:
         data = pd.read_csv(filepath, **read_kwargs)
@@ -168,7 +177,8 @@ def read_transactions_tabular(
         item_encoder=item_encoder,
     )
 
-    return rawdata
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)
 
 
 def _read_transactions_tabular_stream(

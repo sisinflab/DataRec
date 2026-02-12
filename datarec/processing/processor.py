@@ -39,10 +39,9 @@ class Processor:
                     item=datarec.item_col,
                     rating=datarec.rating_col if datarec.rating_col in result.columns else None,
                     timestamp=datarec.timestamp_col),
-            derives_from=datarec,
             dataset_name=datarec.dataset_name,
             version_name=datarec.version_name,
-            pipeline=pipeline
         )
+        new_datarec.pipeline = pipeline
 
         return new_datarec

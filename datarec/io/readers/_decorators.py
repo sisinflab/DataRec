@@ -57,15 +57,15 @@ def annotate_datarec_output(func: Callable[P, R]) -> Callable[P, DataRec]:
             params["filename"] = os.path.basename(params.pop("filepath"))
 
         pipeline_step = PipelineStep("read", func.__name__, params)
-        pipeline = Pipeline()
-        pipeline.steps.append(pipeline_step)
+        # pipeline = Pipeline()
+        # pipeline.steps.append(pipeline_step)
 
         if isinstance(result, RawData):
+            result.pipeline_step = pipeline_step
             dataset_name = params.get("dataset_name", "datarec")
             version_name = params.get("version_name", "no_version_provided")
             return DataRec(
                 rawdata=result,
-                pipeline=pipeline,
                 registry_dataset=False,
                 dataset_name=dataset_name,
                 version_name=version_name,
@@ -73,7 +73,8 @@ def annotate_datarec_output(func: Callable[P, R]) -> Callable[P, DataRec]:
 
         if isinstance(result, DataRec):
             if result.pipeline is None:
-                result.pipeline = pipeline
+                result.pipeline = Pipeline()
+                result.pipeline.steps.append(pipeline_step)
             else:
                 result.pipeline.steps.append(pipeline_step)
             return result

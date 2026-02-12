@@ -43,8 +43,8 @@ class Splitter:
                                               item=datarec.item_col,
                                               rating=datarec.rating_col,
                                               timestamp=datarec.timestamp_col),
-                                      derives_from=datarec,
-                                      dataset_name=datarec.dataset_name,
-                                      pipeline=pipeline.copy())
+                                      dataset_name=datarec.dataset_name,)
+                new_datarec.pipeline = pipeline.copy()
                 result[k] = new_datarec
+
         return result

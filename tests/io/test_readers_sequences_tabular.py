@@ -1,4 +1,5 @@
 from pathlib import Path
+from datarec import DataRec
 
 from datarec.io.readers.sequences.tabular import (
     read_sequence_tabular_inline,
@@ -28,9 +29,10 @@ def test_read_sequence_tabular_inline(tmp_path):
         stream=False,
     )
     # Expect 5 rows exploded
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 5
-    assert set(rd.data[rd._user_col]) == {"u1", "u2"}
-    assert set(rd.data[rd._item_col]) == {"a", "b", "c", "d", "e"}
+    assert set(rd.data[rd.user_col]) == {"u1", "u2"}
+    assert set(rd.data[rd.item_col]) == {"a", "b", "c", "d", "e"}
 
     rd_enc = read_sequence_tabular_inline(
         str(p),
@@ -44,10 +46,11 @@ def test_read_sequence_tabular_inline(tmp_path):
         encode_ids=True,
         chunksize=1,
     )
+    assert isinstance(rd_enc, DataRec)
     assert rd_enc.is_encoded(on="users") is True
     assert rd_enc.is_encoded(on="items") is True
-    assert rd_enc.data[rd_enc._user_col].max() >= 1
-    assert rd_enc.data[rd_enc._item_col].max() >= 2
+    assert rd_enc.data[rd_enc.user_col].max() >= 1
+    assert rd_enc.data[rd_enc.item_col].max() >= 2
 
 
 def test_read_sequence_tabular_wide(tmp_path):
@@ -66,6 +69,7 @@ def test_read_sequence_tabular_wide(tmp_path):
         item_col="item",
         col_sep="\t"
     )
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 3
     assert set(rd.data[rd.user_col]) == {"i2", "u1"}  # header row included as data
     assert set(rd.data[rd.item_col]) >= {"i1", "i2", "i3"}
@@ -90,6 +94,7 @@ def test_read_sequence_tabular_implicit(tmp_path):
         drop_length_col=True,
         encode_ids=True,
     )
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 5
     assert rd.is_encoded(on="users") is True
     assert rd.is_encoded(on="items") is True

@@ -1,9 +1,9 @@
 from datarec.io.readers.transactions.json import read_transactions_json_base
-from typing import Optional
-from datarec.io.rawdata import RawData
-from datarec.io.readers._decorators import annotate_rawdata_output
+from typing import Optional, cast
+from datarec.io.readers._decorators import annotate_datarec_output
+from datarec import DataRec
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_transactions_jsonl(
     filepath: str, 
     *,
@@ -13,7 +13,10 @@ def read_transactions_jsonl(
     timestamp_col: Optional[str] = None,
     stream: bool = False,
     encode_ids: bool = False,
-    chunksize: int = 100_000) -> RawData:
+    chunksize: int = 100_000,
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a JSON Lines file and returns it as a RawData object.
     
@@ -25,11 +28,14 @@ def read_transactions_jsonl(
         item_col: JSON key corresponding to the item field (Required).
         rating_col: JSON key corresponding to the rating field.
         timestamp_col: JSON key corresponding to the timestamp field.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: The loaded data.
+        DataRec: The loaded data.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
-    return read_transactions_json_base(
+    rawdata = read_transactions_json_base(
         filepath,
         user_col=user_col,
         item_col=item_col,
@@ -40,3 +46,5 @@ def read_transactions_jsonl(
         encode_ids=encode_ids,
         chunksize=chunksize,
     )
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, rawdata)

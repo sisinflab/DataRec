@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+from datarec import DataRec
 from datarec.io.rawdata import RawData
 from datarec.io.readers.transactions.blocks import read_transactions_blocks
 from datarec.io.writers.transactions.blocks import write_transactions_blocks
@@ -29,10 +30,11 @@ def test_read_transactions_blocks_item_id(tmp_path):
 
     rd = read_transactions_blocks(str(p), **_read_args("item", "id", sep=","))
 
-    assert rd.data[rd.user].tolist() == ["10", "20", "30"]
-    assert rd.data[rd.item].tolist() == ["1", "1", "2"]
-    assert rd.rating is None
-    assert rd.timestamp is None
+    assert isinstance(rd, DataRec)
+    assert rd.data[rd.user_col].tolist() == ["10", "20", "30"]
+    assert rd.data[rd.item_col].tolist() == ["1", "1", "2"]
+    assert rd.rating_col is None
+    assert rd.timestamp_col is None
 
 
 def test_read_transactions_blocks_item_id_rating(tmp_path):
@@ -50,10 +52,11 @@ def test_read_transactions_blocks_item_id_rating(tmp_path):
         **_read_args("item", "id,rating", rating_col="rating", sep=","),
     )
 
-    assert rd.data[rd.user].tolist() == ["10", "20"]
-    assert rd.data[rd.item].tolist() == ["1", "2"]
-    assert rd.data[rd.rating].tolist() == ["4", "3"]
-    assert rd.timestamp is None
+    assert isinstance(rd, DataRec)
+    assert rd.data[rd.user_col].tolist() == ["10", "20"]
+    assert rd.data[rd.item_col].tolist() == ["1", "2"]
+    assert rd.data[rd.rating_col].tolist() == ["4", "3"]
+    assert rd.timestamp_col is None
 
 
 def test_read_transactions_blocks_item_id_rating_timestamp(tmp_path):
@@ -77,10 +80,11 @@ def test_read_transactions_blocks_item_id_rating_timestamp(tmp_path):
         ),
     )
 
-    assert rd.data[rd.user].tolist() == ["10", "20"]
-    assert rd.data[rd.item].tolist() == ["1", "2"]
-    assert rd.data[rd.rating].tolist() == ["4", "3"]
-    assert rd.data[rd.timestamp].tolist() == ["2005-01-01", "2005-01-02"]
+    assert isinstance(rd, DataRec)
+    assert rd.data[rd.user_col].tolist() == ["10", "20"]
+    assert rd.data[rd.item_col].tolist() == ["1", "2"]
+    assert rd.data[rd.rating_col].tolist() == ["4", "3"]
+    assert rd.data[rd.timestamp_col].tolist() == ["2005-01-01", "2005-01-02"]
 
 
 def test_read_transactions_blocks_user_id(tmp_path):
@@ -96,10 +100,11 @@ def test_read_transactions_blocks_user_id(tmp_path):
 
     rd = read_transactions_blocks(str(p), **_read_args("user", "id", sep=","))
 
-    assert rd.data[rd.user].tolist() == ["10", "10", "20"]
-    assert rd.data[rd.item].tolist() == ["1", "2", "3"]
-    assert rd.rating is None
-    assert rd.timestamp is None
+    assert isinstance(rd, DataRec)
+    assert rd.data[rd.user_col].tolist() == ["10", "10", "20"]
+    assert rd.data[rd.item_col].tolist() == ["1", "2", "3"]
+    assert rd.rating_col is None
+    assert rd.timestamp_col is None
 
 
 def test_read_transactions_blocks_user_id_rating(tmp_path):
@@ -117,10 +122,11 @@ def test_read_transactions_blocks_user_id_rating(tmp_path):
         **_read_args("user", "id,rating", rating_col="rating", sep=","),
     )
 
-    assert rd.data[rd.user].tolist() == ["10", "20"]
-    assert rd.data[rd.item].tolist() == ["1", "2"]
-    assert rd.data[rd.rating].tolist() == ["4", "3"]
-    assert rd.timestamp is None
+    assert isinstance(rd, DataRec)
+    assert rd.data[rd.user_col].tolist() == ["10", "20"]
+    assert rd.data[rd.item_col].tolist() == ["1", "2"]
+    assert rd.data[rd.rating_col].tolist() == ["4", "3"]
+    assert rd.timestamp_col is None
 
 
 def test_read_transactions_blocks_user_id_rating_timestamp(tmp_path):
@@ -144,10 +150,11 @@ def test_read_transactions_blocks_user_id_rating_timestamp(tmp_path):
         ),
     )
 
-    assert rd.data[rd.user].tolist() == ["10", "20"]
-    assert rd.data[rd.item].tolist() == ["1", "2"]
-    assert rd.data[rd.rating].tolist() == ["4", "3"]
-    assert rd.data[rd.timestamp].tolist() == ["2005-01-01", "2005-01-02"]
+    assert isinstance(rd, DataRec)
+    assert rd.data[rd.user_col].tolist() == ["10", "20"]
+    assert rd.data[rd.item_col].tolist() == ["1", "2"]
+    assert rd.data[rd.rating_col].tolist() == ["4", "3"]
+    assert rd.data[rd.timestamp_col].tolist() == ["2005-01-01", "2005-01-02"]
 
 
 def test_read_transactions_blocks_event_before_header(tmp_path):
@@ -398,6 +405,8 @@ def test_round_trip_transactions_blocks_item_id(tmp_path):
     )
     rd2 = read_transactions_blocks(str(out), **_read_args("item", "id", sep=","))
 
+    assert isinstance(rd, DataRec)
+    assert isinstance(rd2, DataRec)
     assert rd2.data.to_dict(orient="records") == rd.data.to_dict(orient="records")
 
 
@@ -425,6 +434,8 @@ def test_round_trip_transactions_blocks_item_id_rating(tmp_path):
         **_read_args("item", "id,rating", rating_col="rating", sep=","),
     )
 
+    assert isinstance(rd, DataRec)
+    assert isinstance(rd2, DataRec)
     assert rd2.data.to_dict(orient="records") == rd.data.to_dict(orient="records")
 
 
@@ -464,6 +475,8 @@ def test_round_trip_transactions_blocks_item_id_rating_timestamp(tmp_path):
         ),
     )
 
+    assert isinstance(rd, DataRec)
+    assert isinstance(rd2, DataRec)
     assert rd2.data.to_dict(orient="records") == rd.data.to_dict(orient="records")
 
 
@@ -485,6 +498,8 @@ def test_round_trip_transactions_blocks_user_id(tmp_path):
     )
     rd2 = read_transactions_blocks(str(out), **_read_args("user", "id", sep=","))
 
+    assert isinstance(rd, DataRec)
+    assert isinstance(rd2, DataRec)
     assert rd2.data.to_dict(orient="records") == rd.data.to_dict(orient="records")
 
 
@@ -512,6 +527,8 @@ def test_round_trip_transactions_blocks_user_id_rating(tmp_path):
         **_read_args("user", "id,rating", rating_col="rating", sep=","),
     )
 
+    assert isinstance(rd, DataRec)
+    assert isinstance(rd2, DataRec)
     assert rd2.data.to_dict(orient="records") == rd.data.to_dict(orient="records")
 
 
@@ -551,6 +568,8 @@ def test_round_trip_transactions_blocks_user_id_rating_timestamp(tmp_path):
         ),
     )
 
+    assert isinstance(rd, DataRec)
+    assert isinstance(rd2, DataRec)
     assert rd2.data.to_dict(orient="records") == rd.data.to_dict(orient="records")
 
 
@@ -561,4 +580,3 @@ def test_write_transactions_blocks_requires_explicit_params(tmp_path):
     out = tmp_path / "blocks.txt"
     with pytest.raises(TypeError):
         write_transactions_blocks(raw, str(out))
-

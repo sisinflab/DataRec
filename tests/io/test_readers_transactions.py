@@ -1,4 +1,5 @@
 from pathlib import Path
+from datarec import DataRec
 
 from datarec.io.readers.transactions.tabular import read_transactions_tabular
 from datarec.io.readers.transactions.json import read_transactions_json
@@ -19,10 +20,11 @@ def test_read_transactions_tabular_header_and_stream(tmp_path):
         encode_ids=True,
         chunksize=1,
     )
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 2
     assert rd.rating_col == "rating"
-    assert rd.user_encoder is not None
-    assert rd.item_encoder is not None
+    assert rd.is_encoded(on="users") is True
+    assert rd.is_encoded(on="items") is True
 
 
 def test_read_transactions_tabular_no_header(tmp_path):
@@ -36,8 +38,9 @@ def test_read_transactions_tabular_no_header(tmp_path):
         rating_col=2,
         header=None,
     )
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 2
-    assert set(rd.data[rd.user]) == {"tom", "bob"}
+    assert set(rd.data[rd.user_col]) == {"tom", "bob"}
 
 
 def test_read_transactions_json(tmp_path):
@@ -53,8 +56,9 @@ def test_read_transactions_json(tmp_path):
         rating_col="rating",
         stream=False,
     )
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 2
-    assert set(rd.data[rd.user]) == {"u1", "u2"}
+    assert set(rd.data[rd.user_col]) == {"u1", "u2"}
 
 
 def test_read_transactions_jsonl_stream(tmp_path):
@@ -73,6 +77,7 @@ def test_read_transactions_jsonl_stream(tmp_path):
         encode_ids=True,
         chunksize=1,
     )
+    assert isinstance(rd, DataRec)
     assert len(rd.data) == 2
-    assert rd.user_encoder is not None
-    assert rd.item_encoder is not None
+    assert rd.is_encoded(on="users") is True
+    assert rd.is_encoded(on="items") is True

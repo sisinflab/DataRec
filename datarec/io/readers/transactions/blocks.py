@@ -1,10 +1,11 @@
 import os
-from typing import Optional, List, Any, Dict, Literal
+from typing import Optional, List, Any, Dict, Literal, cast
 
 import pandas as pd
 
 from datarec.io.rawdata import RawData
-from datarec.io.readers._decorators import annotate_rawdata_output
+from datarec.io.readers._decorators import annotate_datarec_output
+from datarec import DataRec
 
 
 def _raise_parse_error(
@@ -19,7 +20,7 @@ def _raise_parse_error(
     raise ValueError(f"Line {line_num}: {message}{block_info}. Line content: {line!r}")
 
 
-@annotate_rawdata_output
+@annotate_datarec_output
 def read_transactions_blocks(
     filepath: str,
     *,
@@ -31,7 +32,9 @@ def read_transactions_blocks(
     timestamp_col: Optional[str] = None,
     sep: str = "\t",
     chunksize: Optional[int] = None,
-) -> RawData:
+    dataset_name: str = "Unknown Dataset",
+    version_name: str = "Unknown Version",
+) -> DataRec:
     """
     Reads a block text format into transactional RawData.
 
@@ -55,9 +58,12 @@ def read_transactions_blocks(
         timestamp_col: Output timestamp column name (required if layout includes timestamp).
         sep: Field separator used in event lines.
         chunksize: Optional number of rows per in-memory chunk before concatenation.
+        dataset_name: Name to assign to the resulting DataRec dataset.
+        version_name: Version identifier to assign to the resulting DataRec dataset.
 
     Returns:
-        RawData: A RawData object containing all interactions row-by-row.
+        DataRec: A DataRec object containing all interactions row-by-row.
+            (Returned via @annotate_datarec_output, which wraps the RawData.)
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
@@ -200,4 +206,5 @@ def read_transactions_blocks(
         timestamp=timestamp_col,
     )
 
-    return raw
+    # Wrapped by @annotate_datarec_output to return DataRec at call sites.
+    return cast(DataRec, raw)
