@@ -1,6 +1,7 @@
-dataset_name: Amazon Beauty
+dataset_name: "Amazon Beauty"
 versions:
 # - "2014"
+  - "2018"
   - "2023"
 latest_version: "2023"
 

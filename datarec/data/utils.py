@@ -1,5 +1,5 @@
-import os
 import hashlib
+import os
 from typing import Union
 import statistics
 
@@ -124,18 +124,19 @@ def popularity(quartiles: dict):
     return categories
 
 
-def verify_checksum(file_path: str, checksum: str) -> None:
+def verify_checksum(file_path: str, checksum: str, algorithm: str = "md5") -> None:
     """
-    Verifies the MD5 checksum of a file.
+    Verifies the checksum of a file.
 
-    This function computes the MD5 hash of the file at the given path and
+    This function computes the hash of the file at the given path and
     compares it to the expected checksum. If the file does not exist, a
     FileNotFoundError is raised. If the checksum does not match, a RuntimeError
     is raised indicating possible corruption or version mismatch.
 
     Args:
         file_path (str): The path to the file to verify.
-        checksum (str): The expected MD5 checksum.
+        checksum (str): The expected checksum.
+        algorithm (str): The hashing algorithm to use.
 
     Raises:
         FileNotFoundError: If the specified file does not exist.
@@ -145,12 +146,16 @@ def verify_checksum(file_path: str, checksum: str) -> None:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(f"File '{file_path}' not found.")
 
-    md5 = hashlib.md5()
+    try:
+        hasher = hashlib.new(algorithm)
+    except ValueError as exc:
+        raise ValueError(f"Unsupported checksum algorithm '{algorithm}'.") from exc
+
     with open(file_path, "rb") as f:
         for chunck in iter(lambda: f.read(65536), b""):
-            md5.update(chunck)
+            hasher.update(chunck)
 
-    digest = md5.hexdigest()
+    digest = hasher.hexdigest()
     if not digest == checksum:
         raise RuntimeError(f"Checksum mismatch for '{file_path}': expected {checksum}, but got {digest}. "
                            f"The file may be corrupted or a new version has been downloaded.")

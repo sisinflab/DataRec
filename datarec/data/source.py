@@ -1,4 +1,6 @@
 import os
+import shutil
+from pathlib import Path
 import requests
 from dataclasses import dataclass
 from typing import Optional, Union, Dict
@@ -9,6 +11,7 @@ import gdown
 @dataclass
 class Source:
     checksum: str = None
+    checksums: Optional[Dict[str, str]] = None
     checksum_algorithm: str = "md5"
     prepared: bool = False
     source_name: Optional[str] = None
@@ -38,7 +41,7 @@ class Source:
         print(f'{self.filename}: verifying checksum')
         if output_folder is None:
             output_folder = self.output_folder
-        verify_checksum(self.path(output_folder), self.checksum)
+        verify_checksum(self.path(output_folder), self.checksum, self.checksum_algorithm)
 
     def download(self) -> str:
         pass
@@ -173,6 +176,121 @@ class GdownSource(Source):
         print(f"{self.filename} downloaded from {self.url}")
 
 @dataclass
+class KaggleSource(Source):
+    dataset_name: str = None
+
+    def _validate_multi_file_checksums(self) -> None:
+        if self.checksums is None:
+            return
+        if self.inner_paths is None:
+            raise RuntimeError("KaggleSource defines 'checksums' but no 'inner_paths'")
+
+        checksum_keys = set(self.checksums.keys())
+        inner_path_keys = set(self.inner_paths.keys())
+        if checksum_keys != inner_path_keys:
+            raise RuntimeError(
+                f"KaggleSource checksums keys must match inner_paths keys. "
+                f"checksums={sorted(checksum_keys)}, inner_paths={sorted(inner_path_keys)}"
+            )
+
+    def is_locally_available(self, output_folder=None) -> bool:
+        """
+        Kaggle datasets may materialize multiple files, so availability is based
+        on the declared resources rather than on a single filename.
+        """
+        if output_folder is None:
+            output_folder = self.output_folder
+        if output_folder is None:
+            raise ValueError("Must specify an output folder")
+
+        if self.inner_paths:
+            return self.resources_available()
+
+        if self.filename is None:
+            raise RuntimeError("KaggleSource requires either 'inner_paths' or 'filename'")
+
+        return os.path.exists(os.path.join(output_folder, self.filename))
+
+    def verify_checksum(self, output_folder=None) -> None:
+        """
+        Preserve the existing checksum flow for single-file Kaggle sources while
+        allowing multi-file sources to verify each declared file.
+        """
+        if output_folder is None:
+            output_folder = self.output_folder
+
+        if self.checksums is not None:
+            self._validate_multi_file_checksums()
+            print(f"{self.source_name}: verifying checksums")
+            for resource_name, expected_checksum in self.checksums.items():
+                inner_path = self.inner_paths[resource_name]
+                file_path = os.path.join(output_folder, inner_path)
+                print(f"{resource_name}: verifying checksum")
+                verify_checksum(file_path, expected_checksum, self.checksum_algorithm)
+            return
+
+        if self.checksum is None:
+            return
+
+        if self.filename is None:
+            print(f"{self.source_name}: skipping checksum verification for multi-file Kaggle source")
+            return
+
+        super().verify_checksum(output_folder)
+
+    def download(self, output_folder=None) -> str:
+        import kagglehub
+
+        if output_folder is None:
+            output_folder = self.output_folder
+
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        if self.is_locally_available(output_folder):
+            label = self.filename or self.dataset_name or self.source_name
+            print(f"{label}: Files already available, skipping download")
+            if self.filename is not None:
+                return os.path.join(output_folder, self.filename)
+            return output_folder
+
+        if self.dataset_name is None:
+            raise RuntimeError("No Kaggle dataset_name provided")
+
+        self._validate_multi_file_checksums()
+        
+        # kaggle downloads files in its own cache folder, so we need to move it to the output folder
+        kaggle_path = Path(kagglehub.dataset_download(self.dataset_name))
+
+        if self.inner_paths:
+            missing = [path for path in self.inner_paths.values() if not (kaggle_path / path).exists()]
+            if missing:
+                raise RuntimeError(
+                    f"Expected files not found in Kaggle download path {kaggle_path}: {missing}"
+                )
+        elif self.filename is not None:
+            kaggle_filename = kaggle_path / self.filename
+            if not kaggle_filename.exists():
+                raise RuntimeError(f"File {self.filename} not found in Kaggle download path {kaggle_filename}")
+        else:
+            raise RuntimeError("KaggleSource requires either 'inner_paths' or 'filename'")
+        
+        # we move all the downloaded files to avoid downloading them again in the future
+        for item in kaggle_path.iterdir():
+            destination = Path(output_folder) / item.name
+            if item.is_dir():
+                shutil.copytree(item, destination, dirs_exist_ok=True)
+            else:
+                shutil.copy2(item, destination)
+
+        print()  # ensure newline after carriage returns
+        label = self.filename or self.dataset_name or self.source_name
+        print(f"{label} downloaded from Kaggle")
+        if self.filename is not None:
+            return os.path.join(output_folder, self.filename)
+        return output_folder
+
+@dataclass
 class ManualSource(Source):
     message: str = ''
 
@@ -278,6 +396,7 @@ SOURCE_TYPES = {
     'HttpSource': HttpSource,
     'GdownSource': GdownSource,
     'ManualSource': ManualSource,
+    'KaggleSource': KaggleSource,
     'NestedSource': NestedSource
 }
 
@@ -291,7 +410,10 @@ def set_source(source_name:str, source_conf:dict) -> Source:
     Returns:
         (Source): a dataset source object
     """
-    source_type = SOURCE_TYPES[source_conf['source_type']]
+    source_type_name = source_conf['source_type']
+    if source_type_name not in SOURCE_TYPES:
+        raise ValueError(f"Unsupported source type '{source_type_name}'. Supported types: {', '.join(SOURCE_TYPES.keys())}")    
+    source_type = SOURCE_TYPES[source_type_name]
     source = source_type(source_name=source_name, **source_conf['args'])
     return source
 

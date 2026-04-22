@@ -1,5 +1,6 @@
-dataset_name: Amazon Baby
+dataset_name: "Amazon Baby"
 versions:
+  - "2018"
   - "2023"
 latest_version: "2023"
 

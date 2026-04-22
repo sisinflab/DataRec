@@ -1,0 +1,28 @@
+dataset_name: "Amazon CDs And Vinyl"
+version: "2018"
+
+sources:
+  reviews:
+    source_type: HttpSource
+    args:
+      downloadable: True
+      url: https://snap.stanford.edu/data/amazon/productGraph/categoryFiles/ratings_CDs_and_Vinyl.csv
+      checksum: 67404932efce35be194f3f1088db3971
+      checksum_algorithm: md5
+      filename: ratings_CDs_and_Vinyl.csv
+      inner_paths:
+        ratings: ratings_CDs_and_Vinyl.csv
+
+resources:
+    ratings:
+      source_name: reviews
+      filename: ratings_CDs_and_Vinyl.csv
+      type: interactions
+      format: transactions_tabular
+      required: True
+      schema:
+        sep: ","
+        user_col: 0
+        item_col: 1
+        rating_col: 2
+        timestamp_col: 3

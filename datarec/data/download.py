@@ -121,30 +121,19 @@ def download_browser(url, local_filepath, headers=None, chunk_size=8192):
         return local_filepath
     return None
 
+import os, subprocess, gzip, shutil
+
 
 def decompress_gz(input_file, output_dir, output_file=None, **kwargs):
-    """
-    Decompresses a .gz file.
-
-    Args:
-        input_file (str): The path to the input .gz file.
-        output_dir (str): The path to the output decompressed file.
-        output_file (str, optional): The name of the output file. If None,
-
-    Returns:
-        (str): The path to the decompressed output file.
-    """
-    print(f'Decompress: \'{input_file}\'')
+    print(f"Decompress: '{input_file}'")
     if output_file is None:
-        output_file = os.path.join(output_dir, os.path.basename(input_file).replace('.gz', ''))
+        output_file = os.path.join(output_dir, os.path.basename(input_file).replace(".gz", ""))
     else:
         output_file = os.path.join(output_dir, output_file)
-    assert input_file != output_file, "Input and output file paths must be different."
-    with gzip.open(input_file, 'rb') as f_in:
-        with open(output_file, 'wb') as f_out:
-            shutil.copyfileobj(f_in, f_out)
 
-    print(f'File decompressed: \'{output_file}\'')
+    with gzip.open(input_file, "rb") as f_in, open(output_file, "wb") as f_out:
+        shutil.copyfileobj(f_in, f_out)  # streaming
+        
     return output_file
 
 

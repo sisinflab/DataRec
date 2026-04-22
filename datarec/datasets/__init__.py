@@ -75,6 +75,12 @@ def load_dataset_from_url(url: str, *, folder: Optional[str] = None, prepare_and
 class AlibabaiFashion(DatasetEntryPoint):
     dataset_name = "alibaba_ifashion"
 
+class AmazonAppsForAndroid(DatasetEntryPoint):
+    dataset_name = "amazon_apps_for_android"
+
+class AmazonAutomotive(DatasetEntryPoint):
+    dataset_name = "amazon_automotive"
+
 class AmazonBaby(DatasetEntryPoint):
     dataset_name = "amazon_baby"
 
@@ -84,19 +90,61 @@ class AmazonBeauty(DatasetEntryPoint):
 class AmazonBooks(DatasetEntryPoint):
     dataset_name = "amazon_books"
 
-class AmazonClothing(DatasetEntryPoint):
-    dataset_name = "amazon_clothing"
+class AmazonCDAndVinyl(DatasetEntryPoint):
+    dataset_name = "amazon_cd_and_vinyl"
+
+class AmazonCellPhonesAndAccessories(DatasetEntryPoint):
+    dataset_name = "amazon_cell_phones_and_accessories"
+
+class AmazonClothingShoesAndJewelry(DatasetEntryPoint):
+    dataset_name = "amazon_clothing_shoes_and_jewelry"
+
+class AmazonDigitalMusic(DatasetEntryPoint):
+    dataset_name = "amazon_digital_music"
+
+class AmazonElectronics(DatasetEntryPoint):
+    dataset_name = "amazon_electronics"
+
+class AmazonGroceryAndGourmetFood(DatasetEntryPoint):
+    dataset_name = "amazon_grocery_and_gourmet_food"
+
+class AmazonHealthAndPersonalCare(DatasetEntryPoint):
+    dataset_name = "amazon_health_and_personal_care"
+
+class AmazonHomeAndKitchen(DatasetEntryPoint):
+    dataset_name = "amazon_home_and_kitchen"
+
+class AmazonInstantVideo(DatasetEntryPoint):
+    dataset_name = "amazon_instant_video"
+
+class AmazonKindleStore(DatasetEntryPoint):
+    dataset_name = "amazon_kindle_store"
+
+class AmazonMoviesAndTv(DatasetEntryPoint):
+    dataset_name = "amazon_movies_and_tv"
 
 class AmazonMusic(DatasetEntryPoint):
     dataset_name = "amazon_music"
 
-class AmazonOffice(DatasetEntryPoint):
-    dataset_name = "amazon_office"
+class AmazonMusicalInstruments(DatasetEntryPoint):
+    dataset_name = "amazon_musical_instruments"
 
-class AmazonSportsOutdoors(DatasetEntryPoint):
+class AmazonOfficeProducts(DatasetEntryPoint):
+    dataset_name = "amazon_office_products"
+
+class AmazonPatioLawnAndGarden(DatasetEntryPoint):
+    dataset_name = "amazon_patio_lawn_and_garden"
+
+class AmazonPetSupplies(DatasetEntryPoint):
+    dataset_name = "amazon_pet_supplies"
+
+class AmazonSportsAndOutdoors(DatasetEntryPoint):
     dataset_name = "amazon_sports_and_outdoors"
 
-class AmazonToysGames(DatasetEntryPoint):
+class AmazonToolsAndHomeImprovement(DatasetEntryPoint):
+    dataset_name = "amazon_tools_and_home_improvement"
+
+class AmazonToysAndGames(DatasetEntryPoint):
     dataset_name = "amazon_toys_and_games"
 
 class AmazonVideoGames(DatasetEntryPoint):
@@ -104,6 +152,9 @@ class AmazonVideoGames(DatasetEntryPoint):
 
 class Ambar(DatasetEntryPoint):
     dataset_name = "ambar"
+
+class BookCrossing(DatasetEntryPoint):
+    dataset_name = "bookcrossing"
 
 class CiaoDVD(DatasetEntryPoint):
     dataset_name = "ciao"

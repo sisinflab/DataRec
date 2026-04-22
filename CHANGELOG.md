@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.5] - 2026-24-22
+### Added
+- Bookcrossing dataset Kaggle version
+- Amazon Cd And Vinyl dataset 2014 version
+
+### Changed
+- Read trasactions tabular now manages more arguments for better parsing files
+
+### Fixed
+- Nothing
+
+---
+
 ## [1.5.4] - 2026-02-12
 ### Added
 - Pipeline read/load steps in a DataRec object can be set with new methods that check coherency

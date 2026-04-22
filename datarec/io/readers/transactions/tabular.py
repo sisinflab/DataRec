@@ -45,6 +45,12 @@ def read_transactions_tabular(
     cols: Optional[List[str]] = None,
     engine: Optional[str] = 'c',
     fallback_engine: Optional[str] = 'python',
+    encoding: Optional[str] = None,
+    encoding_errors: str = "strict",
+    quotechar: Optional[str] = '"',
+    escapechar: Optional[str] = None,
+    doublequote: bool = True,
+    on_bad_lines: str = "warn",
     stream: bool = False,
     encode_ids: bool = False,
     chunksize: int = 100_000,
@@ -67,6 +73,12 @@ def read_transactions_tabular(
               to `pandas.read_csv`.
         engine: Pandas CSV engine.
         fallback_engine: Engine to try if the primary fails.
+        encoding: Text encoding for the input file.
+        encoding_errors: Error handling strategy for text decoding.
+        quotechar: Character used to quote fields.
+        escapechar: Character used to escape the separator or quotechar.
+        doublequote: Whether doubled quotechar inside a field is interpreted as one.
+        on_bad_lines: How to handle malformed rows.
         stream: If True, read in chunks to reduce memory.
         encode_ids: If True, encode user/item to int ids using IncrementalEncoder.
         chunksize: Rows per chunk when streaming.
@@ -80,7 +92,20 @@ def read_transactions_tabular(
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
 
-    read_kwargs = dict(sep=sep, header=header, skiprows=skiprows, engine=engine)
+    read_kwargs = dict(
+        sep=sep,
+        header=header,
+        skiprows=skiprows,
+        engine=engine,
+        encoding=encoding,
+        encoding_errors=encoding_errors,
+        quotechar=quotechar,
+        escapechar=escapechar,
+        doublequote=doublequote,
+        on_bad_lines=on_bad_lines,
+    )
+    read_kwargs = {key: value for key, value in read_kwargs.items() if value is not None}
+
     if cols is not None:
         read_kwargs["names"] = cols
 
