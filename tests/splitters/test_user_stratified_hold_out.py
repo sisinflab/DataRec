@@ -58,8 +58,17 @@ def test_run_no_split(sample_datarec):
 def test_empty_train_set(too_small_dataset):
     splitter = UserStratifiedHoldOut(test_ratio=0.01, val_ratio=0.01)
 
-    with pytest.raises(ValueError):
-        splitter.run(too_small_dataset)
+    with pytest.warns(UserWarning, match="skipped splitting"):
+        result = splitter.run(too_small_dataset)
+
+    assert len(result["train"].data) + len(result["test"].data) + len(result["val"].data) == len(
+        too_small_dataset.data)
+
+    user_two_train = result["train"].data[result["train"].data["user_id"] == 2]
+    user_two_val = result["val"].data[result["val"].data["user_id"] == 2]
+
+    assert len(user_two_train) == 1
+    assert len(user_two_val) == 0
 
 
 def test_run_splitting(sample_datarec):
@@ -78,8 +87,6 @@ def test_run_splitting(sample_datarec):
         assert test_count == ceil(original_count * 0.2)
         assert ceil((original_count - test_count) * 0.2)
         assert train_count + test_count + val_count == original_count
-
-
 
 
 

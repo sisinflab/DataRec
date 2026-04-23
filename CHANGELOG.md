@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.6] - 2026-24-23
+### Added
+- Nothing
+
+
+### Changed
+- User stratified splitting is now faster
+
+### Fixed
+- Nothing
+
+---
+
 ## [1.5.5] - 2026-24-22
 ### Added
 - Bookcrossing dataset Kaggle version
